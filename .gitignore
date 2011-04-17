@@ -1,0 +1,9 @@
+*.aux
+*.gz
+*.log
+*.out
+*.pdf
+*.toc
+notes.txt
+temp.txt
+images/*

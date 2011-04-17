@@ -1,0 +1,1080 @@
+\documentclass[ebook,10pt,twoside,openright]{memoir}
+
+\usepackage[T1]{fontenc}
+%\usepackage[danish]{babel,varioref}
+\usepackage[utf8]{inputenc}
+
+% include book-specific macros and settings
+\usepackage{squashbox}
+
+% set title page content
+\title{SquashBox}
+\author{Morten Wulff}
+\date{\today}
+
+% add extra options to hyperref if we're generating a pdf
+\ifpdf
+	\usepackage[pdfauthor={Morten Wulff},%
+	            pdftitle={\thetitle},%
+	            pdfdisplaydoctitle=true,%
+	            hypertexnames=false,%
+	            plainpages=false,%
+	            pdftex]{hyperref}
+\else
+	\usepackage{hyperref}
+\fi
+\usepackage{memhfixc}
+
+\begin{document}
+
+\frontmatter
+
+% create title pages
+\squashboxhalftitlepage{\thetitle}
+\squashboxtitlepage{A virtual development environment based on VirtualBox, Ubuntu, and NetBeans.}{\thetitle}{}
+
+\include{copyright}
+
+% create toc with no page number on the first page
+\begingroup
+\aliaspagestyle{chapter}{empty}
+\tableofcontents*
+\endgroup
+
+% ============================================================================
+\chapter{Preface}
+
+\section*{Audience}
+
+This guide assumes that you know your way around your computer. You do not have to be a super user, but it will definitely help if you have tried installing a couple of CMS'es on your local machine or on shared hosting.
+
+% TODO: expand this section
+
+\section*{Conventions used in this guide}
+
+\begingroup
+\setlength{\parindent}{0pt}
+
+This guide uses the following typographical conventions:
+
+\begin{description}
+\item[\normalfont\emph{Italic}] Indicates file names, folders, module and package names, new terms, and emphasized text.
+\item[\normalfont\texttt{Fixed width}] Indicates code, file contents, commands, and terminal output.
+\end{description}
+
+Arrows are used to indicate navigation of a web site or application menus:
+
+\vspace{0.5\baselineskip}
+\hspace{2\baselineskip}\emph{Structure $\rightarrow$ Content types $\rightarrow$ Add content type}
+\vspace{0.5\baselineskip}
+
+This indicates that you should click on the link \emph{Structure}, then on the link \emph{Content types} and finally click on the link \emph{Add content type}.
+
+% TODO: add example for navigating netbeans menus.
+
+\endgroup
+
+\mainmatter
+
+\part{Setting up shop}
+
+% ============================================================================
+\chapter{Base system} \label{chbasesystem}
+\chapterprecis{Download and install the latest version of Ubuntu on your computer or in a virtual machine.}
+
+\noindent
+Before we get started you must decide if you want to install your development system on a physical machine (e.g. that spare laptop you have lying around) or in a virtual machine on your computer.
+
+If you decide to install on a physical machine, you only need to read the sections \emph{Download Ubuntu} on page \ref{secdownloadubuntu} and \emph{Install Ubuntu} on page \ref{secinstallubuntu}.
+
+% ----------------------------------------------------------------------------
+\section{Download Ubuntu} \label{secdownloadubuntu}
+
+To get started, you need to download the latest version of the Ubuntu Desktop Edition (currently, this is version 10.10, nicknamed Maverick Meerkat). Go to the Ubuntu site and click the big \emph{Download Ubuntu} button.
+
+\squashboxlink{http://www.ubuntu.com/}
+
+On the download page, simply click the \emph{Start download} button to download the default version of the Desktop Edition.
+
+\squashboxscreenshot{base/downloadubuntu.png}{Download the recommended version of Ubuntu}{figdownloadubuntu}
+
+If you are planning to install Ubuntu on a spare machine or alongside your existing operating system, you should follow the second step of the guide on the download page to either burn a CD or create a USB drive for installing Ubuntu.
+
+% ----------------------------------------------------------------------------
+\section{Install VirtualBox} \label{secinstallvirtualbox}
+
+Multiple products are available for setting up virtual machines on your computer, e.g. \hreffoot{http://www.vmware.com/products/fusion/}{VMWare Fusion}, \hreffoot{http://www.vmware.com/products/workstation/}{VMWare Workstation}, and \hreffoot{http://www.parallels.com/eu/computing/}{Parallels Desktop}.
+
+This guide uses the open source VirtualBox products, which is available for Mac OS, Windows, and Linux. Go to the download page and pick the installation package that matches your operating system.
+
+\squashboxlink{http://www.virtualbox.org/wiki/Downloads}
+
+Once you have downloaded the package, you can run it and follow the steps in the installer to setup VirtualBox. This guide does not cover the VirtualBox installation process in detail. Please refer to the documentation on the VirtualBox site.
+
+When VirtualBox is installed, you can execute it and start configuring your first virtual machine.
+
+\squashboxscreenshot{base/virtualboxwelcome.png}{VirtualBox manager}{figvirtualboxwelcome}
+
+In the VirtualBox Manager (see figure \ref{figvirtualboxwelcome}), click the \emph{New} button to start the \emph{Virtual Machine Wizard}. When you click \emph{Continue} on the first page of the wizard, it is time to select which operating system the virtual machine will be running and giving it a memorable name. We'll call the machine \emph{SquashBox} and tell the wizard that it will be running Ubuntu (see figure \ref{figvirtualboxwizardname}).
+
+\squashboxscreenshot{base/virtualboxwizardname.png}{Naming your virtual machine}{figvirtualboxwizardname}
+
+Since this virtual machine will be used for development and debugging, we will assign 1024~MB of memory to it. If you have \emph{lots} of free memory, or if you plan to use the virtual machine as your primary development environment, you can increase this. The wizard indicates how much memory you can safely allocate to the virtual machine (see figure \ref{figvirtualboxwizardmemory}).
+
+\squashboxscreenshot{base/virtualboxwizardmemory.png}{Allocating memory to the virtual machine}{figvirtualboxwizardmemory}
+
+The next step is to create a virtual disk for the virtual machine. Instead of using a physical hard disk in your machine, the virtual machine uses one or more files on your file system to emulate a hard disk. We'll stick with the default settings and create a new hard disk with 8~GB of space (see figure \ref{figvirtualboxwizarddisk}).
+
+\squashboxscreenshot{base/virtualboxwizarddisk.png}{Creating a virtual disk for the virtual machine}{figvirtualboxwizarddisk}
+
+Click \emph{Continue} to open the \emph{Create new virtual disk} wizard. You can choose between fixed-size storage and dynamically expanding storage. We'll choose the dynamic option to make sure that the virtual disk doesn't take up more space than necessary (see figure \ref{figvirtualboxwizarddisktype}).
+
+\squashboxscreenshot{base/virtualboxwizarddisktype.png}{Selecting the hard disk storage type}{figvirtualboxwizarddisktype}
+
+When you have selected a storage type, you can set the size and location of the virtual disk. By default, the virtual disk is placed in the same folder as the virtual machine definition. If you have enough free space on your hard disk you probably don't have to change the locations, but it can be handy if you want to put the virtual disk on another partition or drive (see figure \ref{figvirtualboxwizarddisklocation}). When you have reviewed the settings for the new disk, you can click \emph{Done} to create the disk and exit the wizard.
+
+\squashboxscreenshot{base/virtualboxwizarddisklocation.png}{Selecting the location and size of the virtual disk}{figvirtualboxwizarddisklocation}
+
+Finally, you can review the settings of your new virtual machine and click \emph{Done} in the main wizard to create the machine and exit the wizard.
+
+Before you can boot your shiny new virtual machine, you have to make a few changes to its settings. Click the \emph{Settings} button in the VirtualBox Manager to change the display settings and attach the Ubuntu CD image you downloaded earlier.
+
+Start by clicking the \emph{Display} tab and adding some video memory. We will make 64~MB available to the guest operating system (see figure \ref{figvirtualboxconfiguredisplay}).
+
+\squashboxscreenshot{base/virtualboxconfiguredisplay.png}{Display settings}{figvirtualboxconfiguredisplay}
+
+To be able to boot from the Ubuntu CD image, you must attach it to the virtual machine. Go to the \emph{Storage} tab and select the empty slot beneath the IDE controller. Click the little disk icon next to the attributes dropdown, select \emph{Choose a virtual CD/DVD disk file}, and select the Ubuntu Desktop disk image (see figure \ref{figvirtualboxconfigurestorage}).
+
+\squashboxscreenshot{base/virtualboxconfigurestorage.png}{Storage settings}{figvirtualboxconfigurestorage}
+
+Now you are ready to install Ubuntu Desktop Edition on your virtual machine!
+
+\squashboxscreenshot{base/virtualboxmanager.png}{VirtualBox Manager}{figvirtualboxmanager}
+
+% ----------------------------------------------------------------------------
+\section{Install Ubuntu} \label{secinstallubuntu}
+
+To start the installation, select your virtual machine in the VirtualBox Manager (see figure \ref{figvirtualboxmanager}) and click the \emph{Start} button in the toolbar. The virtual machine will boot from the CD image you attached to it in the previous section.
+
+% TODO: or boot from the CD or USB stick
+
+When the machine has finished booting, you will be presented with the Ubuntu installer. Click \emph{Install Ubuntu} to install Ubuntu on your virtual machine (see figure \ref{figubuntuinstaller}).
+
+\squashboxscreenshot{base/ubuntuinstaller.png}{Ubuntu installer}{figubuntuinstaller}
+
+On the next screen, you can confirm that your virtual machine satisfies Ubuntu's requirements. If you are connected to the internet when you are doing the install, you can choose to download all necessary software updates during the installation process (see figure \ref{figubuntupreparing}).
+
+\squashboxscreenshot{base/ubuntupreparing.png}{Preparing to install Ubuntu}{figubuntupreparing}
+
+The next step is to allocate drive space to the Ubuntu installation. Since we are giving over the entire virtual machine to Ubuntu, we will stick to the default and erase the entire virtual disk (see figure \ref{figubuntuallocate}).
+
+\squashboxscreenshot{base/ubuntuallocate.png}{Allocate drive space}{figubuntuallocate}
+
+If you are not having any second thoughts, you can press the \emph{Install Now} button to start the actual installation (see figure \ref{figubuntuinstallnow}).
+
+\squashboxscreenshot{base/ubuntuinstallnow.png}{Start the installation process}{figubuntuinstallnow}
+
+While the installer copies all the files to your virtual hard disk, you must configure your time zone and keyboard layout, and create a user account.
+
+First, you must select your time zone. This will make sure that all dates and times display correctly. You can either perform the selection by clicking on the world map or by entering the name of the nearest major city in the search field below the map (see figure \ref{figubuntulocale}).
+
+\squashboxscreenshot{base/ubuntulocale.png}{Select your locale}{figubuntulocale}
+
+Next, you must select a keyboard layout. Select your country in the list on the left and choose the specific layout in the list on the right (see figure \ref{figubuntukeyboard}). If you are not sure of which keyboard layout your are using, you can click the \emph{Figure out keyboard layout} button. This will opens a wizard which tries to determine your keyboard layout by having you a series of special characters.
+
+\squashboxscreenshot{base/ubuntukeyboard.png}{Select your keyboard layout}{figubuntukeyboard}
+
+Finally, you must create a user account. Enter your full name and, your desired username, and a password. If you are installing Ubuntu on a virtual machine, you can choose the \emph{Log me in automatically} option, to avoid having to enter your username and password every time your boot the machine. If, instead, you are doing the installation on a physical machine, you should use the default option \emph{Require my password to log in} (see figure \ref{figubuntuaccount}).
+
+\squashboxscreenshot{base/ubuntuaccount.png}{Create an account}{figubuntuaccount}
+
+When the installer has finished copying files and configuring the system, it is time to restart the virtual machine and start adding software to it.
+
+The first time you start your machine, the Ubuntu Update Manager will examine your system and install all available updates. This can take a while. Once all updates have been installed you will have to restart your machine.
+
+\squashboxhint{If you are installing on a virtual machine, now would be a good time to detach the Ubuntu Desktop CD image. Go to the VirtualBox Manager and choose \emph{Settings $\rightarrow$ Storage}. Select the Ubuntu CD image, click the small CD icon next to the drive dropdown list and select \emph{Remove disk from virtual drive}.}
+
+% ----------------------------------------------------------------------------
+\section{Install VirtualBox tools} \label{secinstallvirtualboxtools}
+
+Once you have restarted your virtual machine and installed all available updates, you should take a few minutes to install the VirtualBox guest additions. These tools provide better integration between the guest operating system and the host operating system.
+
+To install the tools, choose \emph{Devices $\rightarrow$ Install Guest Additions}. This will mount a CD image containing the VirtualBox tools in your Ubuntu machine. Go to \emph{Places $\rightarrow$ VBOXADDITIONS} to open the root of the CD and click the \emph{Open Autorun Prompt} to run the software from the CD. When you click \emph{Run} in the dialog that opens, the install script will install the necessary modules and extensions to integrate Ubuntu with the host system.
+
+When the installation script has finished it job, you should restart the virtual machine to enable the newly installed features.
+
+\squashboxhint{The VirtualBox tools make it easy to acces folders on the host machine from the virtual machine, and makes it easy to change the screen resolution of the virtual machine by simply changing the size of the window it is running in.}
+
+% ============================================================================
+\chapter{Servers} \label{chservers}
+\chapterprecis{Install a database server and a web server with scripting support.}
+
+\noindent
+When the Ubuntu installion is complete and all available updates have been installed, it’s time to install the server software required to run Drupal, WordPress, or other PHP-based software.
+
+We could install all the required software packages manually, but we are going to take advantage of the fact that Ubuntu provides a meta-package which installs the latest stable versions of the Apache web server, the MySQL database server and the PHP scripting language.
+
+Open a terminal window by going to \emph{Applications $\rightarrow$ Accessories $\rightarrow$ Terminal} and run the following command to install Apache, MySQL and PHP:
+
+\begin{squashboxcommand}
+sudo apt-get install lamp-server^
+\end{squashboxcommand}
+
+When \verb!sudo! asks for a password, simply enter the password you created for your user account when you installed Ubuntu.
+
+Apt-get displays a list of the packages which are about to be installed. Answer yes or press enter to start the installation. Apt-get will then download and install the required packages.
+  
+As part of the installation process, you will be asked for a password for the MySQL root user. You will need this password to configure the database server later.
+
+% ============================================================================
+\chapter{Development tools} \label{chdevtools}
+\chapterprecis{Install an integrated development environment and a selection of useful browser plugins.}
+
+% ============================================================================
+\chapter{Install Drupal} \label{chinstalldrupal}
+\chapterprecis{Install the latest stable and development versions of Drupal.}
+
+% ============================================================================
+\chapter{Caching} \label{chcaching}
+\chapterprecis{Install an opcode cache and a reverse proxy server.}
+
+\part{Getting to work}
+
+% ============================================================================
+\chapter{Debugging} \label{chdebugging}
+\chapterprecis{Speed up your development workflow with the installed tools.}
+
+% ============================================================================
+\chapter{Performance testing} \label{chperformance}
+\chapterprecis{Identify bottlenecks in your application and get an idea of how it performs under simulated loads.}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% ----------------------------------------------------------------------------
+\section{Community}
+
+\subsection{Lokalt}
+
+\begin{itemize}
+\item Drupal Danmark
+\item drupal.dk
+\item DrupalDay
+\item Drupalcamp
+\end{itemize}
+
+\subsection{Internationalt}
+
+\begin{itemize}
+\item Drupal.org
+\item Groups.drupal.org
+\item DrupalCon
+\item Europæiske dev days, design days, etc.
+\end{itemize}
+
+% ============================================================================
+
+\chapter{Domæne og webhotel}
+\chapterprecis{Hjælper dig med at købe et domænenavn og få det til at virke med et billigt webhotel.}
+
+% ----------------------------------------------------------------------------
+\section{Domæne eller ej}
+
+Før du går i gang med din første Drupal-installation skal du overveje om den blot er til eget brug, eller om du på et tidspunkt vil dele den med resten af internettet. Hvis du ønsker at lege med en lokal installation af Drupal kan du starte med vejledningen på side \ref{install-local}. Hvis du gerne vil dele dit arbejde med andre kan du installere Drupal på et webhotel. I så fald kan du følge resten af dette afsnit og derefter gå til vejledningen på side \ref{install-webhotel}.
+
+Hvis du blot ønsker at udforske Drupal har du ikke behov for at købe et domæne; du kan køre alle dine Drupal-sites på din egne maskine uden at røre en finger. Hvis du arbejder på et site, som du på et tidspunkt gerne vil dele med andre, giver det mening at købe et domæne til formålet. Hvis du ikke har brug for at oprette dit eget domæne kan du springe over resten af dette afsnit og fortsætte med \emph{Installér Drupal på din egen maskine} på side \ref{install-local}.
+
+Et domæne er en unik adresse på internettet (ligesom et telefonnummer er en unik adresse på telefonnettet). Et domæne kan f.eks.\ være \url{dr.dk}, \url{politiken.dk}, \url{information.dk}, osv. Mange webhoteller tilbyder registrering af domæner, men det er generelt en god idé at holde sit domæne adskilt fra sit webhotel. På den måde er det nemmere at skifte udbyder efterhånden som ens behov ændres.
+
+Hvis du vil have dit eget domænenavn er den bedste løsning i øjeblikket at købe det gennem GratisDNS. GratisDNS sørger for kontakten til DK Hostmaster (firmaet som holder styre på de danske domænenavne), og giver dig gode værktøjer til at arbejde med dit domæne.
+
+\section{Vælg et domænenavn}
+
+Første trin i processen er at vælge et domænenavn. På forsiden af \url{gratisdns.dk} er det søgefelt hvor du kan søge efter ledige domænenavne med de mest almindelige endelser som f.eks.\ .dk, .com, .net, osv. (se figur \ref{gratisdns-search}).
+
+\screenshot{installation/gratisdns-search.png}{Brug GratisDNS til at søge efter et domænenavn}{gratisdns-search}
+
+På resultatsiden kan du se hvorvidt det ønskede domæne er tilgængeligt på en række af de mest populære top-level domæner (se figur \ref{gratisdns-search-result}). Hvis du søger efter \emph{drupalbogen} vil du se at domænet \url{drupalbogen.dk} er optaget mens f.eks.\ \url{drupalbogen.eu} og \url{drupalbogen.com} er ledige i skrivende stund.
+
+\screenshot{installation/gratisdns-search-result.png}{Udsnit af GratisDNS søgeresultat}{gratisdns-search-result}
+
+Når du har fundet et ledigt domæne skal du klikke på knappen \emph{Registrer} for at starte bestillingen. I dette eksempel gennemgår vi bestillingen af domænet \url{drupalbogen.dk}.
+
+Når du har klikket på \emph{Registrer} skal du som det første indtaste din adresse og acceptere GratisDNS' handels- og domænebetingelser. Hvis du bestiller et .dk-domæne kan du vælge om din adresse skal skjules når folk slår dit domænenavn op i WHOIS-databasen.\footnote{WHOIS-databasen indeholder bl.a. informationer om ejeren og administratoren af et givet domænenavn.} Ejer du allerede et eller flere domæner kan du desuden indtaste dit registrant ID, så dit nye domæne kan blive knyttet til den rigtige bruger hos DK Hostmaster. Når du har indtastet alle relevante oplysninger kan du fortsætte ved at klikke på knappen \emph{Put i indkøbskurv}.
+
+Du kan nu gennemse indholdet af din indkøbskurv (se figur \ref{gratisdns-cart}). Hvis du ikke ønsker at registrere flere domænenavne i denne omgang skal du klikke på \emph{Bestil} for at gå til betalingssiden. Du kan vælge at betale med kreditkort (Dankort, Visa-kort, osv.), med elektronisk faktura (hvis du handler på vegne af en offentlig institution) eller med en simpel bankoverførsel.
+
+\screenshot{installation/gratisdns-cart.png}{Gennemse din indkøbskurv}{gratisdns-cart}
+
+Når betalingen er gennemført vises en kvitteringsside hvor GratisDNS siger tak for ordren. Du modtager samtidig en kvitteringsmail som indeholder dit bestillingsnummer. Det er en god idé at gemme denne mail hvis du skulle få behov for at kontakte GratisDNS' supportafdeling.
+
+Efter et stykke tid (i dette tilfælde tog det et par timer) modtager du endnu to mails: Én som fortæller at der er blevet opsat DNS for det nye domæne, og én som fortæller dig at din ordre er færdigbehandlet. Den sidste mail indeholder et link til din faktura. Det er en god ide at udskrive en kopi af fakturaen eller gemme en kopi i PDF-format.
+
+Hvis du har valgt at registrere et .dk-domæne skal du desuden bekræfte dit domæne hos DK~Hostmaster, som er administrator for alle .dk-domæner. Umiddelbart efter den sidste mail fra GratisDNS modtager du en mail fra DK~Hostmaster med oplysninger om hvordan du bekræfter dit domæne. Når det er gjort er det tid til at bestille et webhotel.
+
+\section{Valg og køb af webhotel}
+
+Hvis du har en bredbåndsforbindelse og en computer som altid er tændt kan du sagtens selv hoste dit site, men for det meste er det langt nemmere at leje serverplads hos et webhotel. Der findes webhoteller til priser fra 20 til flere tusinde kroner om måneden afhængigt af dine behov for trafik, overvågning og backup.
+
+Som minimum kan du være sikker på at du får adgang til en server som altid er tilgængelig, og som du for de billigere webhotellers vedkommende ikke selv skal vedligeholde med softwareopdateringer o.l.
+
+\drupalboghint{Før du vælger et billigt webhotel er det en god idé at høre om andre brugere på \href{http://drupaldanmark.dk/}{Drupal Danmark} har gode eller dårlige erfaringer med den pågældende udbyder. Den vigtigste huskeregel ved køb af webhotel er at \emph{du får hvad du betaler for}.}
+
+\screenshot{installation/gigahost-front.png}{Forsiden på gigahost.dk}{gigahost-front}
+
+I dette afsnit beskriver vi hvordan du køber og konfigurerer et webhotel hos den danske udbyder Gigahost. Fremgangsmåden vil være den samme uanset hvilken udbyder du vælger. I slutningen af afsnittet er der en liste over alternativer til Gigahost.
+
+Start med at gå til \url{gigahost.dk} (se figur \ref{gigahost-front}) og klik på linket \emph{Bestil dit webhotel nu}. Du bliver bedt om at indtaste dine kontaktoplysninger og om at vælge det brugernavn som du ønsker at bruge til at administrere din konto.
+
+\drupalboghint{Hos Gigahost betaler du for et år ad gangen, så inklusiv oprettelse kommer dit webhotel til at koste 340 kroner. Hvis du ikke er tilfreds med webhotellet kan du lukke din konto inden for 14 dage og få dine penge retur.}
+
+Når du har gennemført betalingen med enten Dankort, kreditkort eller bankoverførsel bliver du sendt videre til loginsiden (se figur \ref{gigahost-login}) hvor du kan logge ind med den kombination af brugernavn og adgangskode, som du valgte tidligere.
+
+\screenshot{installation/gigahost-login.png}{Loginsiden til Gigahosts kontrolpanel}{gigahost-login}
+
+Når du har logget ind bliver du præsenteret for kontrolpanelets forside, som indeholder en liste over dine domæner (som sikkert vil være tom første gang du logger ind), links til ofte benyttede funktioner samt de seneste nyheder fra Gigahosts blog og support (se figur \ref{gigahost-panel}).
+
+\screenshot{installation/gigahost-panel.png}{Kontrolpanelets forside}{gigahost-panel}
+
+I venstre side af skærmen er der en række faneblade som giver dig mulighed for at tilpasse indstillingerne for dit webhotel. Fanerne dækker over følgende funktioner og værktøjer:
+
+\begin{description}
+\item[Forside] Viser en oversigt over dine aktive domæner og viser nyheder fra Gigahost.
+\item[Adgang] Viser alle de oplysninger, som du skal bruge for at overføre filer til webhotellet, forbinde til databaseserveren samt sende og modtage e-mail. Siden indeholder også de oplysninger, som du skal bruge til at konfigurere dit domæne hos GratisDNS.
+\item[Mailadresser] Her kan du administrere de e-mail-adresser, som er knyttet til dine domæner.
+\item[Domæner] Viser en oversigt over de domæner, som er knyttet til din Gigahost konto. Du kan tilknytte eller tilkøbe domæner samt administrere underdomæner for hvert af dine domæner.
+\item[Databaser] Her kan du administrere dine MySQL-databaser og få adgang til værktøjet phpMyAdmin.
+\item[Værktøjer] Viser dig detaljeret statistik for dine domæner og giver dig mulighed for at opsætte periodiske opgaver (cron-jobs).
+\item[SMS] Giver dig mulighed for at sende SMS-beskeder. Du kan enten sende SMS-beskeder direkte fra kontrolpanelet eller bruge Gigahosts API til at sende SMS-beskeder fra dit site. SMS-beskeder koster i skrivende stund 29 øre pr.\ stk.
+\item[Support] Indedholder links til Gigahosts \emph{Knowledgebase} og teknisk information om dit webhotel og giver dig mulighed for at kontakte Gigahost support.
+\item[Indstillinger] Her kan du ændre dine kontaktoplysninger, skifte din adgangskode og vælge sprog for kontrolpanelet.
+\item[Betalinger] Viser en oversigt over dit forbrug og giver dig mulighed for enten at forlænge din konto eller lukke den helt.
+\item[Driftsstatus] Giver dig et overblik og aktuelle driftsproblemer og planlagt vedligehold.
+\item[Log ud] Klik på denne fane når du er færdig med at tilpasse indstillingerne for dit webhotel.
+\end{description}
+
+Først skal du gå til faneblade \emph{Domæner} og klikke på underfanen \emph{Tilknyt domæne}. Indtast dit domænenavn i tekstfeltet og klik på knappen \emph{Tilknyt} (se figur \ref{gigahost-add-domain}).
+
+\screenshot{installation/gigahost-add-domain.png}{Tilknyt et domæne til din Gigahost konto}{gigahost-add-domain}
+
+Når du har tilføjet domænet bliver det vist på oversigten som et selvstændigt domæne (dvs. et domæne som du ikke har købt gennem Gigahost). Indtil du tilpasser indstillingerne for domænet på GratisDNS viser Gigahost meddelelsen \emph{Fejl ved domænet} udfor dit domænenavn (se figur \ref{gigahost-domain-error}). Fejlen skyldes at dit domænenavn endnu ikke peger på Gigahosts servere. Det retter vi op på i det følgende afsnit.
+
+\screenshot{installation/gigahost-domain-error.png}{Fejl ved domænet}{gigahost-domain-error}
+
+Før vi ændrer indstillingerne for domænet på GratisDNS skal vi have valgt en passende PHP-version for vores domæne og oprette en database, som Drupal kan bruge til at gemme sine data i.
+
+Fra domæneoversigten klikker du på dit domænenavn for at komme til domænets oversigtsside. På oversigtssiden kan du bl.a.\ se statistik for domænet, gå til domænets midlertidige URL (hvis DNS-oplysningerne endnu ikke er opdateret), oprette viderestilling for domænet eller fjerne det fra din konto (se figur \ref{gigahost-domain-overview}).
+
+\screenshot{installation/gigahost-domain-overview.png}{Oversigtssiden for et domæne}{gigahost-domain-overview}
+
+Fra oversigtssiden klikker du på fanebladet \emph{PHP-opsætning}, vælger \emph{PHP 5.3} fra dropdown-listen og klikker på \emph{Skift PHP-version} for at skifte til den seneste udgave af PHP. (se figur \ref{gigahost-php-version}). Fra denne side kan du også skifte mere grundlæggende indstillinger for PHP. Klik på linket \emph{Skift PHP-indstillinger} for at tildele mere hukommelse til PHP eller ændre den maksimale størrelse af uploadede filer.
+
+\screenshot{installation/gigahost-php-version.png}{Skift PHP-version}{gigahost-php-version}
+
+Det sidste du mangler er at oprette en database til dit nye site. Klik på fanen \emph{Databaser} og klik på underfanen \emph{Opret ny database}. Her skal du indtaste navnet på den nye database og den adgangskode, som du bruger til at logge ind på kontrolpanelet. Hvis du har tænkt dig at knytte mange domæner til din konto er det en god idé at bruge domænenavnet som en del af navnet på databasen (se figur \ref{gigahost-create-database}).
+
+\screenshot{installation/gigahost-create-database.png}{Opret en database til dit site}{gigahost-create-database}
+
+Som tidligere nævnt er Gigahost ikke den eneste billige udbyder på det danske marked. Andre anbefalelsesværdige webhoteller som er til at betale for hobby-brugere:
+
+\begin{itemize}
+\item \hreffoot{http://netplads.dk/}{Netplads.dk} (priser fra 19 kr.\ pr.\ måned)
+\item \hreffoot{http://www.webhot.dk/}{Web-Hotel Danmark} (priser fra 199 kr.\ pr.\ måned)
+\end{itemize}
+
+Hvis du allerede nu ved at du har behov for en kraftigere hosting-løsning, kan du med fordel starte med at kigge på ydelserne fra nedennævnte udbydere. Fælles for disse udbydere er at de kræver langt større teknisk indsigt end de billige webhoteller, fordi du typisk selv skal stå for at installere og vedligeholde den nødvendige software. Til gengæld får du fuld kontrol over dit hosting-miljø og kan dermed bygge mere avancerede løsninger.
+
+\begin{itemize}
+\item \hreffoot{http://www.linode.com/}{Linode}
+\item \hreffoot{http://omega8.cc/}{Omega8}
+\item \hreffoot{http://www.slicehost.com/}{Slicehost}
+\item \hreffoot{http://www.vps.net/}{VPS.net}
+\end{itemize}
+
+De ovennævnte leverandører har alle pakker som starter omkring 20 dollar pr.\ måned, typisk med mulighed for rabat hvis du køber større pakker eller binder dig for mere end én måned ad gangen.
+
+\section{Konfigurér dit domæne}
+
+Før du kan tage dit webhotel i brug skal du sørge for at dit domænenavn peger på webhotellets servere. I dette afsnit bruges Gigahost igen som eksempel, men proceduren er stort set den samme uanset hvilket webhotel du har valgt.
+
+For at kunne opsætte de rigtige \emph{DNS records} for domænet skal vi bruge IP adressen på den server som dit webhotel er placeret på. Hos Gigahost kan du finde alle de nødvendige oplysninger på fanebladet \emph{Adgang} (se figur \ref{gigahost-dns}).
+
+\screenshot{installation/gigahost-dns.png}{DNS-oplysninger for Gigahost webhotel}{gigahost-dns}
+
+Start med at logge ind på DNS kontrolpanelet hos GratisDNS. Du kan enten følge linket \emph{Kontrolpanel} fra forsiden eller gå direkte til følgende adresse:
+
+\shadedlink{http://admin.gratisdns.dk/}
+
+DNS kontrolpanelet giver dig adgang til en række værktøjer som du kan bruge til at administrere dit domæne (se figur \ref{gratisdns-buttons}), de fleste værktøjer er rettet mod professionelle brugere, så i dette afsnit beskæftiger vi os kun med indstillingerne for \emph{Primær DNS}.
+
+\screenshot{installation/gratisdns-buttons.png}{DNS kontrolpanelets hovedmenu}{gratisdns-buttons}
+
+Når du klikket på knappen \emph{Primær DNS} i hovedmenuen får du en oversigt over alle de domæner, som du har registreret gennem GratisDNS. Klik på knappen \emph{Ændre DNS} udfor det domæne, som du ønsker at arbejde med.
+
+Kontrolpanelet for det enkelte domæne kan virke en smule uoverskueligt ved første øjekast, men i første omgang kan vi heldigvis nøjes med at kigge på de tre sektioner \emph{A}, \emph{CNAME} og \emph{MX}. Under sektionen \emph{A} skal du klikke på knappen \emph{Tilføj A} for at tilføje en ny \emph{A record} til dit domnæne. En A record fortæller DNS-systemet hvilken IP adresse et givet domæne skal pege på. Vi bruger oplysningerne fra Gigahosts kontrolpanel og fortæller GratisDNS at \url{drupalbogen.dk} skal pege på IP adressen \texttt{217.116.232.218} (se figur \ref{gratisdns-a-record}).
+
+\screenshot{installation/gratisdns-a-record.png}{Tilføj en \emph{A record} til dit domæne}{gratisdns-a-record}
+
+Når din A record er sat op kan folk få adgang til dit site ved at skrive dit domænenavn i deres browser (f.eks.\ \url{drupalbogen.dk}). For at gøre det muligt at bruge underdomæner som f.eks.\ \texttt{www.drupalbogen.dk} eller \texttt{beta.drupalbogen.dk} er vi nødt til at tilføje en \emph{CNAME record}. Et CNAME fungerer som et alternativt navn for en A record, så den kan bruges til angive at de to førnævnte underdomæner begge skal pege på domænet \texttt{drupalbogen.dk}. I dette eksempel er der ikke behov for at avancerede indstillinger som at have forskellige underdomæner til at pege på forskellige IP adresser, så vi laver et \emph{stjernealias} som fortæller at alle underdomæner skal pege på den samme A record (se figur \ref{gratisdns-cname-record}).
+
+\screenshot{installation/gratisdns-cname-record.png}{Tilføj en \emph{CNAME record} til dit domæne}{gratisdns-cname-record}
+
+Vil du gerne kunne modtage e-mail på dit nye domæne skal du også konfigurere en \emph{MX record}, som mail-servere bruger til at finde ud af hvor e-mail til et bestemt domæne rent faktisk skal sendes hen. I dette eksempel udnytter vi at mail følger med webhotellet hos Gigahost, så vi fortæller GratisDNS at al mail til domænet skal sendes til Gigahosts mail-server (se figur \ref{gratisdns-mx-record}).
+
+\screenshot{installation/gratisdns-mx-record.png}{Tilføj en \emph{MX record} til dit domæne}{gratisdns-mx-record}
+
+Når dine ændringer til DNSen er slået igennem (det sker typisk indenfor ca.\ 12 timer) kan du gå tilbage til kontrolpanelet hos Gigahost og kontrollere at dit domæne nu har skiftet status fra \emph{Fejl ved domænet} til \emph{Domænet virker} (se figur \ref{gigahost-domain-ok}).
+
+\screenshot{installation/gigahost-domain-ok.png}{Domænet er klar til brug}{gigahost-domain-ok}
+
+Hvis du har fulgt vejledningen i dette kapitel fra start til slut kan du nu gå til afsnit \ref{install-webhotel} på side \pageref{install-webhotel} for at starte installationen af Drupal~7.
+
+\part{Installér Drupal}
+
+% ============================================================================
+\chapter{Installation}
+\chapterprecis{Guider dig igennem installationen af Drupal på din egen maskine eller på et webhotel og forklarer hvordan du kan få Drupal til at tale dansk.}
+
+\noindent
+Før du begynder at installere Drupal skal du sikre dig at dit webhotel eller din lokale maskine opfylder Drupals minimumskrav til software:
+
+\begin{description}
+\item[Webserver] Apache 1.3 eller 2.x, Microsoft IIS
+\item[Database] MySQL version 5.0.15 eller nyere, PostgreSQL 8.3 eller nyere
+\item[PHP] Til Drupal 7 anbefales PHP 5.3
+\end{description}
+
+Dette er kun et udsnit af af systemkravene. Du kan se den til enhver tid gældende liste på følgende adresse:
+
+\shadedlink{http://drupal.org/requirements}
+
+Hvis du installerer dit site på et webhotel hos Gigahost eller på lokal MAMP eller WAMP server behøver du ikke at bekymre dig om systemkravene; du kan installere Drupal~7 uden problemer.
+
+% ----------------------------------------------------------------------------
+\section{Installér Drupal på din egen maskine} \label{install-local}
+
+\subsection{Mac OS X}
+
+Gå til \url{http://acquia.com/downloads} og download \emph{Stack installer for Mac OS X}.
+
+%\screenshot{installation/acquia-stack-mac-01.png}{}{acquia-stack-mac-01}
+
+Dobbeltklik på filen for at åbne disk imaget.
+
+%\screenshot{installation/acquia-stack-mac-02.png}{Lorem ipsum sit dolor et amet.}{acquia-stack-mac-02}
+
+%\doubleshot{installation/acquia-stack-mac-03.png}{Lorem ipsum sit dolor et amet}{acquia-stack-mac-03}{installation/acquia-stack-mac-04.png}{Lorem ipsum sit dolor et amet}{acquia-stack-mac-04}
+
+%\screenshot{installation/acquia-stack-mac-03.png}{}{acquia-stack-mac-03}
+
+%\screenshot{installation/acquia-stack-mac-04.png}{}{acquia-stack-mac-04}
+
+%\screenshot{installation/acquia-stack-mac-05.png}{}{acquia-stack-mac-05}
+
+%\screenshot{installation/acquia-stack-mac-06.png}{}{acquia-stack-mac-06}
+
+%\screenshot{installation/acquia-stack-mac-07.png}{}{acquia-stack-mac-07}
+
+%\screenshot{installation/acquia-stack-mac-08.png}{}{acquia-stack-mac-08}
+
+%\screenshot{installation/acquia-stack-mac-09.png}{}{acquia-stack-mac-09}
+
+%\screenshot{installation/acquia-stack-mac-10.png}{}{acquia-stack-mac-10}
+
+%\screenshot{installation/acquia-stack-mac-11.png}{}{acquia-stack-mac-11}
+
+%\screenshot{installation/acquia-stack-mac-12.png}{}{acquia-stack-mac-12}
+
+%\screenshot{installation/acquia-stack-mac-13.png}{}{acquia-stack-mac-13}
+
+\subsection{Linux}
+
+
+
+\subsection{Windows}
+
+% ----------------------------------------------------------------------------
+\section{Installér Drupal på et webhotel} \label{install-webhotel}
+
+Hvis du allerede er klar til at bygge dit første offentligt tilgængelige Drupal-site, eller hvis du gerne vise dine eksperimenter frem, kan du med fordel vælge at installere Drupal på et webhotel i stedet for på din lokale maskine.
+
+I dette afsnit lærer du, hvordan du kan installere Drupal 7 på et webhotel hos \hreffoot{http://gigahost.dk/}{Gigahost}. Fremgangsmåden vil være den samme næsten uanset hvilken af de billige webhoteludbydere du vælger.
+
+Før du går i gang skal kende navnet på databasen som du vil bruge sammen med Drupal~7 samt det brugernavn og den adgangskode som kan bruges til at få adgang til databasen. Hvis du installerer dit site på et webhotel hos Gigahost skal du desuden bruge databaseserverens værtsnavn og portnummer. Du finder begge oplysninger på fanebladet \emph{Adgang} i Gigahost kontrolpanelet.
+
+Vi starter med at hente en kopi af Drupal~7. Du kan altid finde et link til den seneste version på følgende URL, hvor du også kan finde links til populære udvidelsesmoduler og udførlig dokumentation.
+
+\shadedlink{http://drupal.org/start}
+
+Klik på linket \emph{Download Druapl 7.0} for at gå til projektsiden for \emph{Drupal Core}. Projektsiden indeholder links til alle understøttede versioner af Drupal. I skrivende stund er det Drupal~6.x og Drupal~7.x. Siden vi ønsker at installere version 7 skal du klikke på linket \emph{tar.gz} udfor version 7.0 i download-tabellen. Gem filen på dit skrivebord eller et andet sted hvor du nemt kan finde frem til den.
+
+Filen bliver gemt med navnet \texttt{drupal-7.0.tar.gz}. Hvis du bruger Mac eller Linux kan du pakke filen ud blot ved at dobbeltklikke på den. Hvis du bruger Windows kan du downloade en kopi af det gratis program \hreffoot{http://www.7-zip.org/}{7-Zip} og bruge det til at udpakke den downloadede fil.
+
+Når du har udpakket filen skulle du gerne have en mappe med navnet \texttt{drupal-7.0} med samme indhold som på figur \ref{drupal-unpacked}.
+
+\screenshot{installation/drupal-unpacked.png}{Indholdet af Drupal 7-pakken fra drupal.org}{drupal-unpacked}
+
+Nu skal alle de udpakkede filer kopieres til webhotellet. Til det formål har du brug for en FTP-klient. Uanset hvilket operativsystem du bruger er der mange klienter at vælge imellem:
+
+\begin{description}
+\item[Mac] \hreffoot{http://cyberduck.ch/}{Cyberduck}, \hreffoot{http://extendmac.com/flow/}{Flow}, \hreffoot{http://www.panic.com/transmit/}{Transmit}
+\item[Linux] \hreffoot{http://www.bareftp.org/}{bareFTP}, \hreffoot{http://filezilla-project.org/}{FileZilla}
+\item[Windows] FileZilla, \hreffoot{http://winscp.net/}{WinSCP}
+\end{description}
+
+For at uploade filerne skal du bruge brugernavnet og adgangskoden til din FTP-konto. Bruger du Gigaghost kan du finde oplysningerne på fanebladet \emph{Adgang} i kontrolpanelet. I dette tilfælde skal vi uploade filerne til serveren \texttt{web18.gigahost.dk} (se figur \ref{ftp-login}).
+
+\screenshot{installation/ftp-login.png}{Login på webhotellet med FTP}{ftp-login}
+
+Før du uploader filerne skal du sikre dig at din FTP-klient viser og overfører skjulte filer. Hvordan det gøres er forskelligt fra klient til klient, men du kan kontrollere det ved at se efter om filen \texttt{.htaccess} bliver vist på listen af filer, som skal overføres (se figur \ref{ftp-overview}).
+
+\screenshot{installation/ftp-overview.png}{Lokale filer klar til at blive overført til webhotellet}{ftp-overview}
+
+Når du overfører filerne skal du sørge for at placere dem i den rigtige mappe på webhotellet. Mappens navn er forskellig fra webhotel til webhotel. Den kan hedde \texttt{html}, \texttt{public} eller noget helt tredje. Bruger du Gigahost skal du overføre filerne til mappen \texttt{www/ditdomæne.dk}.
+
+Hele Drupal~7-mappen fylder omkring 10 MB, så det vil tage nogle minutter for alle filerne er uploadet til dit webhotel. Når alle filerne er blevet overført, er du klar til at køre Drupal's installationsscript.
+
+% ----------------------------------------------------------------------------
+\section{Kør Drupals installationsscript}
+
+Når du har installeret et lokalt udviklingsmiljø eller konfigureret dit webhotel er du klar til at installere Drupal. Før vi går i gang skal du sikre dig at du kender adressen på dit lokale site samt brugernavnet og adgangskoden til din database.
+
+Hvis du har fulgt vejledningen i opsætning af et lokalt udviklingsmiljø i det foregående afsnit er adressen på dit lokale site \url{http://d7.local/} og du kan få adgang til databasen \emph{drupal\_7} med brugernavnet \emph{drupal} og adgangskoden \emph{drupal}.
+
+Hvis du installerer Drupal~7 på et webhotel skal du bruge de databaseoplysninger som du har fået fra udbyderen.
+
+Før du kan bruge Drupal skal der oprettes en masse tabeller i databasen. Derfor skal du køre installationsscriptet som leveres med Drupal.
+
+Du starter installationen af Drupal ved at åbne URLen til dit Drupal-site i en browser. Har du installeret Drupal lokalt skal du åbne \texttt{http://localhost/}, ellers skal du åbne \texttt{http://ditdomæne.dk/}.
+
+\screenshot{installation/drupal-profile.png}{Vælg en installationsprofil}{drupal-profile}
+
+På det første trin af installationen (figur \ref{drupal-profile}) skal du vælge en \emph{installationsprofil}. Du kan vælge mellem \emph{Standard} og \emph{Minimal}. Profilen \emph{Standard} er et godt valg hvis du vil hurtigt i gang med at lege med Drupal, eller hvis du vil bygge et simpelt site med en nyhedssektion og nogle få statiske sider. Hvis du skal i gang med at bygge et site fra bunden er det nemmere at starte med profilen \emph{Minimal} og oprette de nødvendige indholdstyper manuelt.
+
+I afsnittet \ref{section-modules-core} på side \pageref{section-modules-core} kan du se hvilke moduler der bliver slået til af de to installationsprofiler. I denne omgang vælger vi installationsprofilen \emph{Standard}, så vi hurtigt kan komme i gang med at bygge vores første Drupal-site.
+
+\screenshot{installation/drupal-language.png}{Vælg sprog for sitet}{drupal-language}
+
+Når du har valgt en installationsprofil skal du vælge hvilket sprog du ønsker at bruge som standardsprog på dit site (se figur \ref{drupal-language}). Som standard kan du kun vælge engelsk. Se afsnit \ref{subsec-danish-install} på side \pageref{subsec-danish-install} for information om hvordan du kan installere Drupal med f.eks.\ dansk som standardsprog.
+
+\screenshot{installation/drupal-database.png}{Konfigurér databasen}{drupal-database}
+
+Derefter kontrollerer installationsscriptet om din webserver og databaseserver opfylder Drupals minimumskrav. Hvis der ikke bliver fundet nogen problemer kan du konfigurere databasen (figur \ref{drupal-database}). Du kan vælge mellem databaserne MySQL, PostgreSQL og SQLite.
+
+Når du har valgt databasetype skal du indtaste databasenavn, brugernavn og adgangskode. Hvis din database ikke ligger på samme server som databaseserveren kan du indtaste et alternativt værtsnavn og databaseport under \emph{Advanced options} (det er bl.a.\ tilfældet hvis du bruger Gigahost, hvor du skal indtaste et databasenavn på formen \texttt{mysqlX.gigahost.dk} og portnummeret \texttt{3306}).
+
+Hvis du bruger den samme database til flere Drupal-sites eller hvis databasen deles af Drupal og Wordpress, kan du indtaste et \emph{table prefix} som bliver tilføjet til alle Drupals tabeller (hvis du bruger d7 som table prefix betyder det f.eks. at \emph{system}-tabellen kommer til at hedde \texttt{d7\_system}).
+
+\screenshot{installation/drupal-batch.png}{Drupal installeres}{drupal-batch}
+
+Derefter sørger installationsscriptet for at installere og konfigurere alle nødvendige moduler (figur \ref{drupal-batch}).
+
+\screenshot{installation/drupal-configure.png}{Konfigurér sitet}{drupal-configure}
+
+Når databasen er konfigureret og installationsprofilens moduler er sat op skal du udfylde basal information om dit site og oprette den første brugerkonto (figur \ref{drupal-configure}). Den første bruger har ubegrænset adgang til hele sitet, så følg anvisningerne for at vælge en sikker adgangskode (i dette eksempel er adgangskoden \texttt{!Drupal7}). Opret en separat admin-konto, som ikke er din dag-til-dag konto. Land/tidszone. Lad de to sidste felter være valgt for at hjælpe dig til at holde dit site opdateret.
+
+\drupalbogwarning{Du bør aldrig bruge den første brugerkonto i dit daglige arbejde med sitet. Brug den kun når du har behov for at opgradere eller installere moduler og temaer. Til dagligt brug kan du oprette en konto med rollen \emph{Administrator}.}
+
+\screenshot{installation/drupal-complete.png}{Installation fuldført}{drupal-complete}
+
+Som sidste trin ændres tilladelserne på settings-filen, så den ikke kan ændres (figur \ref{drupal-complete}). Du kan nu klikke på linket \emph{Visit your new site} for at gå til forsiden af dit nye Drupal-site.
+
+\screenshot{installation/drupal-front.png}{Forsiden af dit nye Drupal-site}{drupal-front}
+
+\drupalboghint{Det er en god idé at læse filen \texttt{INSTALL.txt} som leveres sammen med Drupal. Den indeholder en masse nyttig information om hvordan du installerer Drupal og løser almindeligt forekommende problemer.}
+
+Før du går i gang med at udforske dit nye site bør du sætte et \emph{cron}-job op som kan sørge for at opdatere Drupals søgeindex m.m. Drupal indeholder simpel funktionalitet til at køre periodiske job\footnote{Baseret på funktionalitet fra modulet \emph{Poormanscron}.} (du kan tilpasse indstillingerne på \emph{Configuration $\rightarrow$ Cron}), men du opnår bedre resultater hvis din udbyder tilbyder afvikling af cron-jobs.
+
+\screenshot{installation/gigahost-cron.png}{Opret et nyt periodisk job}{gigahost-cron}
+
+Hvis du bruger Gigahost som webhotel kan du oprette periodiske job direkte i kontrolpanelet. Gå til fanen \emph{Værktøjer}, vælg \emph{Periodiske job} og klik til sidst på \emph{Opret et periodisk job}. Giv dit cron-job et navn og sæt adressen til \texttt{http://ditdomæne.dk/cron.php}. Derefter skal du vælge hvor ofte du ønske at køre jobbet. For langt de fleste sites vil det være passende at vælge \emph{Alle måneder}, \emph{Alle dage} og \emph{Hver time} (se figur \ref{gigahost-cron}).
+
+% ----------------------------------------------------------------------------
+\section{Drupal på dansk}
+
+\subsection{Installér Drupal på dansk} \label{subsec-danish-install}
+
+Som du kan se af de forskellige screenshots i forrige afsnit er engelsk standardsproget for Drupals installationsscript. Hvis du ønsker at gennemføre størstedelen af installationen på dansk har du to forskellige muligheder: Du kan enten downloade den danske oversættelse af Drupal manuelt, eller du kan bruge installationsprofilen \emph{Localized Drupal} (du kan læse mere om installationsprofiler i appendix \ref{chapter-profiles} på side \pageref{chapter-profiles}).
+
+\subsubsection{Manuelt}
+
+Den manuelle løsning egner sig bedst hvis du ønsker at installere Drupal med den minimale installationsprofil, som leveres med Drupal.
+
+\begin{enumerate}
+\item Gå til \url{http://localize.drupal.org/}
+\item Klik på linket \emph{Danish} i tabellen
+\item Download oversættelsen af Drupal 7
+\item Gem filen i mappen \texttt{profiles/minimal/translations}
+\end{enumerate}
+
+Når du kører installationsscriptet har du nu mulighed for at vælge mellem dansk og engelsk som sprog til dit nye Drupal-site.
+
+\subsubsection{Localized Drupal}
+
+Hvis du ønsker at installere Drupal med installationsprofilen \emph{Standard} eller hvis du gerne vil hjælpe til med at oversætte Drupal er det oplagt at bruge installationsprofilen \emph{Localized Drupal}. Profilen indeholder alle tilgængelige oversættelser af Drupal 7, samt alle de værktøjer som du skal bruge for at kunne bidrage til oversættelsesarbejdet. Den seneste version kan hentes fra følgende URL:
+
+\drupalproject{l10n\_install}
+
+\begin{leftbar}
+TODO: screenshot fra installscript
+\end{leftbar}
+
+\subsection{Installér oversættelser af moduler}
+
+Hvis du har brugt installationsprofilen \emph{Localized Drupal} kan Drupal konfigureres til automatisk at søge efter opdaterede oversættelser af de installerede moduler og temaer. For at få det bedste udbytte bør du kontrollere at indstilllingerne for \emph{Location update}-modulet er fornuftige.
+
+Gå til siden \emph{Configuration $\rightarrow$ Languages $\rightarrow$ Translation updates} og sørg for at indstillingerne svarer til listen nedenfor.
+
+\begin{description}
+\item[Update source] Vælg \emph{Remote server only} for kun at hente oversættelser fra den officielle server.
+\item[Update mode] Vælg \emph{Edited translations are kept} for at sikre at dine lokale ændringer i oversættelsen ikke bliver overskrevet.
+\item[Check for updates] Du kan fint nøjes med at vælge \emph{Weekly}, oversættelserne bliver ikke opdateret dagligt.
+\item[Update disable modules] Bør sættes til \emph{Disabled}. Der er ingen grund til at downloade oversættelser af moduler som du ikke bruger.
+\end{description}
+
+Når du har gemt indstillingerne kan du gå til \emph{Configuration $\rightarrow$ Translate interface $\rightarrow$ Update} for at søge efter opdaterede oversættelser. Hvis der er tilgængelige opdateringer kan du klikke på \emph{Update translations} for at downloade og installere de nye oversættelser.
+
+\subsection{Hjælp til med oversættelsen} \label{danish-help}
+
+\begin{itemize}
+\item l10n\_client
+\item l.d.o
+\item poedit
+\end{itemize}
+
+% ============================================================================
+\chapter{Moduler}
+\chapterprecis{Fortæller dig hvordan du installerer tredjepartsmoduler og giver en gennemgang af de vigtigste moduler.}
+
+\noindent
+Kernen af Drupal består af omkring 50 moduler, hvoraf kun de 7 er obligatoriske. Som du kan se i \ref{part-tutorial}, \emph{Dit første Drupal-site}, kan man komme langt ved blot at bruge en fornuftig kombination af de indbyggede moduler.
+
+Her giver vi dig et overblik over alle de moduler, som er en del af Drupal~7, og giver dig derefter en vejledning til hvordan du finder og installerer nyttige tredjepartsmoduler (også kaldet \emph{contrib}-moduler).
+
+% ----------------------------------------------------------------------------
+\section{Indbyggede moduler} \label{section-modules-core}
+
+Dette afsnit indeholder beskrivelser af alle de moduler, som følger med i en standard Drupal~7-installation. I de tilfælde hvor tredjepartsmoduler tilbyder bedre eller mere fleksible løsninger er det nævnt i beskrivelsen.
+
+\subsection{Obligatoriske moduler}
+
+Disse moduler udgør den absolutte kerne af Drupal, og de er derfor aktiveret på alle Drupal-sites.
+
+\begin{description}
+\item[Field] Tilføjer brugerdefinerede felter til noder, brugerprofiler, taksonomitermer og andre entiteter. Felter kan indeholder tekst, tal, links, e-mail-adresser, billeder og meget andet afhængigt af hvilke feltmoduler du har installeret.
+\item[Field SQL storage] Gemmer indholdet af de brugerdefinerede felter i en SQL-database. Dette er pt.\ den eneste mulighed, men på sigt kan der blive tilføjet flere lagringsmuligheder.
+\item[Filter] Tilbyder forskellige indholdsfiltre, som f.eks. omdannelse af URLer til klikbare links og sikring mod uønskede HTML-tags.
+\item[Node] Håndterer alt indholdet på sitet.
+\item[System] Håndterer grundlæggende funktioner som f.eks. sitets indstillinger, udsendelse af mail samt opdatering af moduler og temaer.
+\item[Text] Definerer forskellige typer af tekstfelter til brug med \emph{Field}-modulet.
+\item[User] Håndterer brugerprofiler og tilladelser.
+\end{description}
+
+\subsection{Moduler i installationsprofilen \emph{Minimal}}
+
+Hvis du vælger at installere Drupal fra installationsprofilen \emph{Minimal} aktiveres følgende moduler udover de obligatoriske moduler.
+
+\begin{description}
+\item[Block] Viser blokke med indhold i forskellige regioner på dit site. Blokke kan f.eks. indeholde søgefelter, lister af populært indhold m.m.
+\item[Database logging] Skriver fejlmeddelelser og anden driftsinformation til en tabel i databasen.
+\item[Update manager] Søger efter tilgængelige opdateringer og kan installere eller opdatere moduler og temaer. Hvis der er opdateringer til et eller flere af dine installerede moduler eller temaer sender \emph{Update manager} en e-mail til den adresse, som er angivet på \emph{Reports $\rightarrow$ Available updates $\rightarrow$ Settings}. På samme side kan du vælge om søgningen skal foretages dagligt eller ugentligt.
+\end{description}
+
+\subsection{Moduler i installationsprofilen \emph{Standard}}
+
+Hvis du installerer Drupal fra installationsprofilen \emph{Standard} aktiveres følgende moduler udover modulerne fra \emph{Minimal} og de obligatoriske moduler.
+
+\begin{itemize}
+\item Color
+\item Comment
+\item Contextual links
+\item Dashboard
+\item Field UI
+\item File
+\item Help
+\item Image
+\item List
+\item Menu
+\item Number
+\item Options
+\item Overlay
+\item Path
+\item RDF
+\item Search
+\item Shortcut
+\item Taxonomy
+\item Toolbar
+\end{itemize}
+
+\subsection{Valgfri moduler}
+
+De resterende moduler bliver ikke aktiveret af de indbyggede installationsprofiler, men er til rådighed hvis du får brug for dem.
+
+\begin{description}
+\item[Aggregator] Brug Feeds i stedet
+\item[Blog]
+\item[Book]
+\item[Contact]
+\item[Content translation]
+\item[Forum] Advanced forum
+\item[Locale] Gør det muligt at oversætte Drupals grænseflade til andre sprog end engelsk (modulet aktiveres kun hvis du vælger at installere Drupal på et andet sprog end engelsk).
+\item[OpenID]
+\item[PHP filter]
+\item[Poll]
+\item[Statistics]
+\item[Syslog]
+\item[Testing]
+\item[Tracker]
+\item[Trigger]
+\end{description}
+
+% ----------------------------------------------------------------------------
+\section{Installation af moduler}
+
+\begin{itemize}
+\item manuel installation
+\item automatisk installation
+\item drupalmodules.com
+\end{itemize}
+
+% ----------------------------------------------------------------------------
+\section{Tredjepartsmoduler}
+
+% TODO: beskriv de moduler, som ingen kan leve uden. ...se desuden appendix C.
+% TODO: hvor finder man dem: drupal.org, drupalmodules.com, drupaldanmark.dk
+
+\part{Dit første Drupal-site} \label{part-tutorial}
+
+% ============================================================================
+\chapter{Tutorial}
+\chapterprecis{Kom hurtigt i gang med Drupal ved at bygge et site med rubrikannoncer i stil med Den Blå Avis.}
+
+% ----------------------------------------------------------------------------
+\section{Grundlæggende opsætning}
+
+% ----------------------------------------------------------------------------
+\section{Datamodel}
+
+% ----------------------------------------------------------------------------
+\section{Kategorier}
+
+% ----------------------------------------------------------------------------
+\section{Visning af indhold}
+
+% ----------------------------------------------------------------------------
+\section{Brugere}
+
+\part{Kogebog}
+
+% ============================================================================
+\chapter{Kogebog}
+\chapterprecis{Korte vejledninger til hvordan du bruger Drupal til at bygge alt fra en blog til et nyhedssite.}
+
+% ----------------------------------------------------------------------------
+\section{Billedgalleri}
+
+% ----------------------------------------------------------------------------
+\section{Blog}
+
+% ----------------------------------------------------------------------------
+\section{Teaterkalender}
+
+% ============================================================================
+\chapter{Theming}
+\chapterprecis{Det kan også blive for blåt. Lær hvordan du kan få Drupal til at tage sig bedre ud.}
+
+% http://www.designtotheme.com/ebooks
+
+% ----------------------------------------------------------------------------
+\section{Sider}
+
+% ----------------------------------------------------------------------------
+\section{Nodes}
+
+% ----------------------------------------------------------------------------
+\section{Views}
+
+\appendix
+\renewcommand{\appendixname}{Appendiks}
+
+\part*{Appendiks}
+
+% ============================================================================
+\chapter{Distributioner} \label{chapter-distributions}
+
+% ----------------------------------------------------------------------------
+\section*{Pressflow}
+
+\shadedlink{http://pressflow.org/}
+
+% ----------------------------------------------------------------------------
+\section*{Open Atrium}
+
+\shadedlink{http://openatrium.com/}
+
+% ----------------------------------------------------------------------------
+\section*{NodeStream}
+
+\shadedlink{http://www.nodestream.org/}
+
+% ----------------------------------------------------------------------------
+\section*{Managing News}
+
+\shadedlink{http://managingnews.com/}
+
+% ============================================================================
+\chapter{Installationsprofiler} \label{chapter-profiles}
+
+% ----------------------------------------------------------------------------
+\section*{Hyperlocal news}
+
+\drupalproject{hyperlocalnews}
+
+% ----------------------------------------------------------------------------
+\section*{Localized Drupal}
+
+\drupalproject{l10n_install}
+
+% ============================================================================
+\chapter{Anbefalede moduler}
+
+% ----------------------------------------------------------------------------
+\section{Administration}
+
+\subsection{Admin}
+
+\drupalproject{admin}
+
+\emph{Admin}-modulet tilføjer en alternativ administrationsmenu, som let kan skjules når man ikke har brug for den.
+
+\subsection{Administration menu}
+
+\drupalproject{admin_menu}
+
+Tilføjer en simpel administationsmenu i toppen af alle sider.
+
+\subsection{Administration theme}
+
+\drupalproject{admin_theme}
+
+Gør det muligt at bruge et andet tema på administrationssiderne.
+
+\subsection{Advanced help}
+
+\drupalproject{advanced_help}
+
+Tilføjer bedre online-hjælp.
+
+\subsection{Better formats}
+
+\drupalproject{better_formats}
+
+Bedre format-valg.
+
+\subsection{Journal}
+
+\drupalproject{journal}
+
+Tving administratorer til at beskrive de ændringer, som de foretager på sitet.
+
+\subsection{Rules}
+
+\drupalproject{rules}
+
+Brug regler til at definere arbejdsgang og automatiske handlinger.
+
+% ----------------------------------------------------------------------------
+\section{Billeder}
+
+\subsection{Image API}
+
+\drupalproject{imageapi}
+
+Integration med \emph{ImageMagick} og \emph{GD}.
+
+\subsection{Imagecache}
+
+\drupalproject{imagecache}
+
+Automatisk beskæring og behandling af billeder.
+
+\subsection{Lightbox}
+
+\drupalproject{lightbox}
+
+Vis billeder i en lightbox over selve siden.
+
+% ----------------------------------------------------------------------------
+\section{Indhold}
+
+\subsection{Content Construction Kit}
+
+\drupalproject{cck}
+
+Tilføj brugerdefinerede felter til indholdstyper.
+
+\subsection{Views}
+
+\drupalproject{views}
+
+Byg lister af indhold. Kan bruges til at lave nyhedsliste, feeds og eksport af data.
+
+\subsection{Views attach}
+
+\drupalproject{views_attach}
+
+Knyt views til indholdselementer.
+
+\subsection{Webform}
+
+\drupalproject{webform}
+
+Tilføj brugerdefinerede formularer til sitet.
+
+% ----------------------------------------------------------------------------
+\section{Søgemaskineoptimering}
+
+\subsection{Global redirect}
+
+\drupalproject{globalredirect}
+
+\subsection{Path redirect}
+
+\drupalproject{path_redirect}
+
+\subsection{Pathauto}
+
+\drupalproject{pathauto}
+
+\subsection{Robots.txt}
+
+\drupalproject{robotstxt}
+
+% ----------------------------------------------------------------------------
+\section{Udvikling}
+
+\subsection{Coder}
+
+\drupalproject{coder}
+
+Kontrollerer om din kode opfylder Drupals krav til kodestandarder.
+
+\subsection{Devel}
+
+\drupalproject{devel}
+
+Forskellige udviklingsværktøjer.
+
+\subsection{Features}
+
+\drupalproject{features}
+
+Gør det nemt at eksportere indstillinger, så de kan lægges i versionskontrol.
+
+\subsection{Schema}
+
+\drupalproject{schema}
+
+Laver oversigter over de forskellige tabeller i databasen.
+
+\subsection{Simpletest}
+
+\drupalproject{simpletest}
+
+Kør automatiske tests af din og andres kode.
+
+% ============================================================================
+\chapter{Themes}
+
+http://www.drupalizing.com/ by http://www.morethanthemes.com/
+
+% ----------------------------------------------------------------------------
+\section{Basethemes}
+
+\subsection{Fusion}
+
+\emph{Fusion} er et basetheme hvor de fleste indstillinger kan ændres gennem Drupals administrationssider. Det er baseret på et 12- eller 16-spaltet grid på 960 pixels i bredden.
+
+\drupalproject{fusion}
+
+\begin{leftbar}
+TODO: screenshot af fusion i aktion, afhænger af oversættelse
+\end{leftbar}
+
+Der findes allerede en del themes baseret på \emph{Fusion}. Nogle af de bedre eksempler er:
+
+\begin{itemize}
+\item \hreffoot{http://drupal.org/project/magazeen}{Magazeen}
+\item \hreffoot{http://drupal.org/project/acquia_prosper}{Acquia Prosper} (optimeret til webshop-brug)
+\item \hreffoot{http://drupal.org/project/acquia_slate}{Acquia Slate}
+\end{itemize}
+
+Du kan finde links til flere eksempler på \emph{Fusion} projektside på Drupal.org, hvor du også kan finde links til forskellige sites som bruger \emph{Fusion}.
+
+\emph{Fusion} er et godt udgangspunkt hvis du vil give brugerne af dit theme flest mulige tilpasningsmuligheder.
+
+\subsection{Mothership}
+
+Mothership er ikke for sarte sjæle, men hvis du er HTML-purist kan det være et godt udgangspunkt for dine egne themes.
+
+\drupalproject{mothership}
+
+Fordi Mothership rydder så grundigt op i Drupals standard HTML og CSS skal du være opmærksom på, at visse funktioner i bl.a. \emph{CCK} og \emph{Views} ikke længere vil være tilgængelige når du bruger dette basetheme.
+
+\begin{leftbar}
+TODO: vis før/efter eksempel
+\end{leftbar}
+
+\subsection{Tao}
+
+
+
+\drupalproject{tao}
+
+\subsection{Zen}
+
+\drupalproject{zen}
+
+% ----------------------------------------------------------------------------
+\section{Gratis themes}
+
+Den største samling af gratis themes finder du i sektionen \emph{Download \& extend} på drupal.org:
+
+\shadedlink{http://drupal.org/project/themes}
+
+Drupal.org
+
+Beskrivelse af themegarden.org
+
+% ----------------------------------------------------------------------------
+\section{Betalte themes}
+
+
+\subsection{Fusion}
+
+Udover de mange gratis themes, som du kan downloade fra drupal.org, er der opstået et marked for betalte themes. Typisk er der tale om
+
+\shadedlink{http://fusiondrupalthemes.com/}
+
+\subsection{SooperThemes}
+
+\shadedlink{http://www.sooperthemes.com/team}
+
+\end{document}
