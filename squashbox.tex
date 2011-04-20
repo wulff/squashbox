@@ -44,12 +44,14 @@
 % ============================================================================
 \chapter{Preface}
 
+% ----------------------------------------------------------------------------
 \section*{Audience}
 
 This guide assumes that you know your way around your computer. You do not have to be a super user, but it will definitely help if you have tried installing a couple of CMS'es on your local machine or on shared hosting.
 
 % TODO: expand this section
 
+% ----------------------------------------------------------------------------
 \section*{Conventions used in this guide}
 
 \begingroup
@@ -57,17 +59,19 @@ This guide assumes that you know your way around your computer. You do not have 
 
 This guide uses the following typographical conventions:
 
+\begin{squashboxsnugshade}
 \begin{description}
 \item[\normalfont\emph{Italic}] Indicates file names, folders, module and package names, new terms, and emphasized text.
 \item[\normalfont\texttt{Fixed width}] Indicates code, file contents, and terminal output.
 \item[\normalfont\textbf{\texttt{Fixed width}}] Indicates commands entered by the user.
 \end{description}
+\end{squashboxsnugshade}
 
 Arrows are used to indicate navigation of a web site or application menus:
 
-\vspace{0.5\baselineskip}
-\hspace{2\baselineskip}\emph{Structure $\rightarrow$ Content types $\rightarrow$ Add content type}
-\vspace{0.5\baselineskip}
+\begin{squashboxsnugshade}
+\emph{Structure $\rightarrow$ Content types $\rightarrow$ Add content type}
+\end{squashboxsnugshade}
 
 This indicates that you should click on the link \emph{Structure}, then on the link \emph{Content types} and finally click on the link \emph{Add content type}.
 
@@ -244,6 +248,7 @@ Note that this version of \verb!php5-gd! uses the system GD library which doesn�
 
 \squashboxlink{http://cumu.li/2008/5/13/recompiling-php5-with-bundled-support-for-gd-on-ubuntu}
 
+% ----------------------------------------------------------------------------
 \section{Configure Apache}
 
 Enable mod\_expires and mod\_rewrite:
@@ -258,6 +263,7 @@ Restart the Apache server
 sudo /etc/init.d/apache2 restart
 \end{squashboxcommand}
 
+% ----------------------------------------------------------------------------
 \section{Configure MySQL}
 
 Nothing to configure, but take a look at the Mercury project.
@@ -282,13 +288,20 @@ You can run the following command to make sure that the new user can log in:
 mysql -usquashbox -psquashbox
 \end{squashboxcommand}
 
+% ----------------------------------------------------------------------------
 \section{Configure PHP}
 
-Edit the /etc/php5/conf.d/xdebug.ini file and add the following lines to it:
+\subsection{Xdebug}
+
+Xdebug lets you step through your code line by line, inspecting variables and the call stack as you go. This makes identifying problems faster than having to rely on printed debug statements or log files.
+
+Before you can use Xdebug to debug and profile your code, you have to modify the configuration slightly. Open a terminal window and run the following command to open the \verb!xdebug.ini! file in a text editor:
 
 \begin{squashboxcommand}
 sudo gedit /etc/php5/conf.d/xdebug.ini
 \end{squashboxcommand}
+
+Add the following settings to the file:
 
 \begin{squashboxoutput}
 xdebug.remote_enable=on
@@ -299,7 +312,9 @@ xdebug.remote_port=9000
 xdebug.profiler_enable_trigger=1
 \end{squashboxoutput}
 
-Restart Apache:
+% TODO: describe the options
+
+When you have saved the file you must run the following command to restart Apache:
 
 \begin{squashboxcommand}
 sudo /etc/init.d/apache2 restart
@@ -311,6 +326,7 @@ PHP has a default memory limit of 128 megabytes. You can edit /etc/php/apache2/p
 \chapter{Development tools} \label{chdevtools}
 \chapterprecis{Install an integrated development environment and a selection of useful browser plugins.}
 
+% ----------------------------------------------------------------------------
 \section{NetBeans}
 
 \begin{squashboxcommand}
@@ -349,6 +365,7 @@ Go to the Services tab, expand the Databases item and right-click on the MySQL S
 
 Enter the MySQL password you chose when setting up the LAMP stack in the Administrator Password field and check the Save Password box. You are now connected to your local database server. If, for some reason, the connection is dropped, you can right-click on the MySQL Server at localhost entry and choose Connect to reconnect to the server.
 
+% ----------------------------------------------------------------------------
 \section{Version control}
 
 \begin{squashboxcommand}
@@ -357,44 +374,55 @@ sudo apt-get install git gitk git-gui
 
 TODO: insert sample git-config
 
+% ----------------------------------------------------------------------------
 \section{Firefox plugins}
 
 %    * install firefox plugins
 
+% ----------------------------------------------------------------------------
 \section{Profiling tools}
 
-Webgrind, Siege and KCachegrind.
+In order to analyze the output files generated by the Xdebug profiler, you must install Webgrind or KCachegrind. This section helps you install both tools so you can decide which on fits your way of working.
 
 \subsection{Webgrind}
 
-Grab the latest copy from GitHub and put it in the /var/www folder.
+First we have to get the latest copy of Webgrind. Since it is hosted on \hreffoot{https://github.com/}{GitHub} we can simply clone the repository to a folder in \verb!/var/www!.
 
 \begin{squashboxcommand}
 sudo git clone git://github.com/jokkedk/webgrind.git /var/www/webgrind
 \end{squashboxcommand}
 
-Edit the hosts file
+Next, we’ll add a hostname for the local webgrind installation. Open a terminal window and run the following command to open the hosts file in a text editor:
 
 \begin{squashboxcommand}
 sudo gedit /etc/hosts
 \end{squashboxcommand}
 
-and add the following line to it:
+Then, add an entry for webgrind and point it at the local web server on 127.0.0.1:
 
 \begin{squashboxoutput}
 127.0.0.1   webgrind
 \end{squashboxoutput}
 
-Create a new virtual host definition:
+Finally, we have to create a new Apache virtual host to handle requests to \url{http://webgrind/}. Open a terminal window and run the following command to create a new virtual host definition:
 
 \begin{squashboxcommand}
 sudo gedit /etc/apache2/sites-available/webgrind
 \end{squashboxcommand}
 
-And tell Apache to reload its configuration files
+It is a good idea to use the hostname as the name of the virtual host file. This makes it easier to manage a lot of virtual hosts.
+
+Enter the following virtual host definition and save the file:
+
+\begin{squashboxoutput}
+% TODO: insert actial vhost configuration
+\end{squashboxoutput}
+
+When you have saved the file, you must run the following commands in a terminal window to enable the new virtual host and reload the Apache configuration files:
 
 \begin{squashboxcommand}
 sudo a2ensite webgrind
+sudo /etc/init.d/apache2 reload
 \end{squashboxcommand}
 
 Open the \url{http://webgrind/} in your browser to verify that webgrind works.
@@ -409,8 +437,10 @@ sudo apt-get install siege
 \chapter{Install Drupal} \label{chinstalldrupal}
 \chapterprecis{Install the latest stable and development versions of Drupal.}
 
+% ----------------------------------------------------------------------------
 \section{Drupal Core}
 
+% ----------------------------------------------------------------------------
 \section{Drush}
 
 % ============================================================================
@@ -427,6 +457,85 @@ sudo apt-get install php5-apc memcached varnish
 \chapter{Using NetBeans} \label{chusingnetbeans}
 \chapterprecis{}
 
+If you haven’t changed any settings, NetBeans will show the following windows on startup:
+
+% TODO: consolidate the two window lists
+
+\begin{itemize}
+\item The main editor
+\item Projects
+\item Files
+\item Services
+\item Navigator
+\item Tasks
+\end{itemize}
+
+You can find add more windows by going to the Window menu. We will cover a couple of these windows in the Xdebug section.
+
+\begin{itemize}
+\item The \emph{Projects} window shows a list of all your NetBeans projects. You can use it to browse the source of all your projects in one place and to see the include paths for different projects (by default all new projects use the global PHP include path).
+\item The \emph{Files} window shows all source files in the active project.
+\item The \emph{Services} window gives you easy access to local database servers, web services, and issue trackers.
+\item The \emph{Navigator} window shows a list of all the functions in the active file. You can double-click any function name to jump directly to the first line of a function in the editor window.
+\item The \emph{Tasks} window gives you an overview of all syntax errors, warnings, and todo items. By default, all occurences of the strings \verb!TODO!, \verb!FIXME!, \verb!XXX!, and \verb!PENDING! are added to the task list. Go to \emph{Tools $\rightarrow$ Options $\rightarrow$ Miscellaneous $\rightarrow$ Tasks} to add your own string patterns.
+\end{itemize}
+
+% ----------------------------------------------------------------------------
+\section{Code completion}
+
+NetBeans makes developing for Drupal easier because it offers code completion of all built-in PHP functions and all functions defined in your current project. This way you have the full Drupal API and its documentation at your fingertips without having to consult \url{http://api.drupal.org/} every time you want to check the exact behavior of a function.
+
+You can try it out for yourself by creating a new PHP file in the root of your Drupal folder. Right-click on the root folder (in this case, it’s called drupal-6.14) and choose \emph{New $\rightarrow$ PHP file}.
+
+If you place the cursor on an empty line and press \verb!CTRL+SPACE!, NetBeans opens a popup listing all global variables and constants. Start typing to narrow down the list or use the arrow keys to choose the variable you want to insert. Press \verb!enter! to insert the variable name at the current cursor position.
+
+Start typing the first few characters of the PHP function \verb!str_replace! and press \verb!CTRL+SPACE! after you have typed str. NetBeans opens two popups: One showing a list of matching function names and a second showing the documentation for the currently selected function. Type more characters to narrow your search or use the arrow keys to choose the function you want to insert. Press \verb!enter! to insert the function name at the current cursor position.
+
+This works for Druapl API functions and functions from contributed modules as well. Try typing dru and then press \verb!CTRL+SPACE! to show a list of all matching functions.
+
+% ----------------------------------------------------------------------------
+\section{Variable highlighting}
+
+Another useful feature is variable highlighting. Open the file bootstrap.inc in the includes folder and jump to the function \verb!drupal_bootstrap()! by double-clicking it in the \emph{Navigator} window. If you place the cursor somewhere in the first occurence of the variable \verb!$phase_index!, NetBeans automatically highlights all four occurences of that variable in the function. This is useful when you are trying to determine whether a local variable is still in use, or to figure out which role a variable plays in a function.
+
+% ----------------------------------------------------------------------------
+\section{Navigation}
+
+Sometimes it’s nice to see where a certain function is defined. This is easy to do in NetBeans by using \emph{Go to Declaration}.
+
+Open \verb!index.php! in the root of the Drupal folder and place the cursor somewhere in the function name \verb!menu_execute_active_handler()! on line 18. (Choose \emph{View $\rightarrow$ Show Line Numbers} to enable line numbers in the editor.) Right-click the function name and select \emph{Navigate $\rightarrow$ Go to Declaration} or press \verb!CTRL+B!. NetBeans now opens the file \verb!menu.inc! where the function is defined.
+
+This example also shows a variation of the variable highlighting mentioned above. If you place the cursor at the beginning of a function name, NetBeans automatically highlights all return statements in the function.
+
+Another useful way of navigating your code is to figure out which functions are calling a given function. Return to index.php in the editor and place the cursor somewhere in the function name \verb!menu_execute_active_handler()!. Right-click the function name and select \emph{Find Usages} or press \verb!ALT+F7!. When you click Find in the dialog, NetBeans opens the Usages window and shows a list of all the calls to the selected function.
+
+% TODO: Add information on code folding.
+
+% ----------------------------------------------------------------------------
+\section{Debugging}
+
+Now that the Xdebug PHP module has been configured, we can use NetBeans to step through the code as it is being executed by the Apache PHP module.
+
+First, we need to mark the line of code where we would like execution to stop. This is called a breakpoint.
+
+We’ll try to step through the Drupal bootstrap process, so start by opening the file includes/bootstrap.inc. Double-click the function \verb!drupal_bootstrap()! in the \emph{Navigator} to jump to line 983 in the file. Place the cursor in the first line of the function and click the line number (line 984) or press \verb!CTRL+F8! to set a breakpoint (Choose \emph{View $\rightarrow$ Show Line Numbers} to enable line numbers in the editor window).
+
+Choose \emph{Debug $\rightarrow$ Debug Project} or press \verb!CTRL+F5! to start a debugging session. The first time you do this, NetBeans displays a dialog where you can configure some general debugging options. Choose Server side PHP and tell NetBeans not to show the dialog again.
+
+NetBeans will open the front page of your site in FireFox and stop at the first breakpoint it encounters. If you return to the NetBeans window you will see a small green arrow next to the line which is about to be executed.
+
+Also, NetBeans automatically opens four windows below the editor windows: Watches, Variables, Call Stack, and Breakpoints. In the Variables window you can see a list of all the variables which are currently in scope as well as all the PHP superglobals. The Call Stack window displays the current call stack, and the Breakpoints windows displays a list of all breakpoints.
+
+\subsection{Keyboard shortcuts}
+
+Use the following shortcuts to step through the code when running under the debugger:
+
+F5 	Continue 	Runs until the next breakpoint or until the code exits, whichever comes first
+F8 	Step over 	Steps through the code one line at a time, but doesn’t enter any functions it encounters
+F7 	Step into 	Like step over, but steps into any functions it encounters
+CTRL+F7 	Step out 	Steps out of a function which has previously been stepped into
+F4 	Run to cursor 	Runs until the current line of execution is on the same line as a cursor (this is useful to skip past big blocks of uninteresting code)
+
 % ============================================================================
 \chapter{Debugging} \label{chdebugging}
 \chapterprecis{Speed up your development workflow with the installed tools.}
@@ -435,7 +544,10 @@ sudo apt-get install php5-apc memcached varnish
 \chapter{Performance testing} \label{chperformance}
 \chapterprecis{Identify bottlenecks in your application and get an idea of how it performs under simulated loads.}
 
+% ----------------------------------------------------------------------------
 \section{Profiling with Webgrind}
+
+In addition to doing step through debugging, you can also use Xdebug to profile your code. Profiling your code lets you see which functions use most of the execution time, making it easy to spot candidates for optimization.
 
 To start the profiler, simply add \verb!?XDEBUG_PROFILE! to any URL on one of your local sites. The page will load normally, but Xdebug will create a \verb!cachegrind.out! file in the \verb!/tmp! folder.
 
@@ -443,6 +555,7 @@ When the cachegrind file has been written you can go to \url{http://webgrind/} t
 
 % TODO: Description of the Webgrind interface.
 
+% ----------------------------------------------------------------------------
 \section{Load testing with Siege}
 
 \end{document}
