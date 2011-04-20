@@ -59,7 +59,8 @@ This guide uses the following typographical conventions:
 
 \begin{description}
 \item[\normalfont\emph{Italic}] Indicates file names, folders, module and package names, new terms, and emphasized text.
-\item[\normalfont\texttt{Fixed width}] Indicates code, file contents, commands, and terminal output.
+\item[\normalfont\texttt{Fixed width}] Indicates code, file contents, and terminal output.
+\item[\normalfont\textbf{\texttt{Fixed width}}] Indicates commands entered by the user.
 \end{description}
 
 Arrows are used to indicate navigation of a web site or application menus:
@@ -80,7 +81,7 @@ This indicates that you should click on the link \emph{Structure}, then on the l
 
 % ============================================================================
 \chapter{Base system} \label{chbasesystem}
-\chapterprecis{Download and install the latest version of Ubuntu on your computer or in a virtual machine.}
+\chapterprecis{Download the latest version of Ubuntu Desktop Edition and install it on a spare computer or a virtual machine.}
 
 \noindent
 Before we get started you must decide if you want to install your development system on a physical machine (e.g. that spare laptop you have lying around) or in a virtual machine on your computer.
@@ -229,13 +230,12 @@ As part of the installation process, you will be asked for a password for the My
 Run the following command to install the remaining packages, which are not included in the meta-package:
 
 \begin{squashboxcommand}
-sudo apt-get install php5-cli php5-gd php5-xdebug
+sudo apt-get install php5-gd php5-xdebug
 \end{squashboxcommand}
 
 This command installs the following packages:
 
 \begin{description}
-\item[php5-cli] The PHP command-line interpreter
 \item[php5-gd] GD support for PHP
 \item[php5-xdebug] Xdebug support for PHP
 \end{description}
@@ -243,6 +243,69 @@ This command installs the following packages:
 Note that this version of \verb!php5-gd! uses the system GD library which doesn’t include all the functions which are included in the version of GD which is bundled with PHP. This means that functions like \verb!imagefilter()! and \verb!imagerotate()! will not be available. If you need access to these functions, you can follow this guide to compile your own version of the php5-gd package:
 
 \squashboxlink{http://cumu.li/2008/5/13/recompiling-php5-with-bundled-support-for-gd-on-ubuntu}
+
+\section{Configure Apache}
+
+Enable mod\_expires and mod\_rewrite:
+
+\begin{squashboxcommand}
+sudo a2enmod expires rewrite
+\end{squashboxcommand}
+
+Restart the Apache server
+
+\begin{squashboxcommand}
+sudo /etc/init.d/apache2 restart
+\end{squashboxcommand}
+
+\section{Configure MySQL}
+
+Nothing to configure, but take a look at the Mercury project.
+
+Make sure that you can log in to MySQL as the root user:
+
+\begin{squashboxcommand}
+mysql -u root -p
+\end{squashboxcommand}
+
+Create a squashbox user:
+
+\begin{squashboxcommand}
+CREATE USER squashbox@localhost IDENTIFIED BY 'squashbox';
+FLUSH PRIVILEGES;
+EXIT
+\end{squashboxcommand}
+
+You can run the following command to make sure that the new user can log in:
+
+\begin{squashboxcommand}
+mysql -usquashbox -psquashbox
+\end{squashboxcommand}
+
+\section{Configure PHP}
+
+Edit the /etc/php5/conf.d/xdebug.ini file and add the following lines to it:
+
+\begin{squashboxcommand}
+sudo gedit /etc/php5/conf.d/xdebug.ini
+\end{squashboxcommand}
+
+\begin{squashboxoutput}
+xdebug.remote_enable=on
+xdebug.remote_handler=dbgp
+xdebug.remote_mode=req
+xdebug.remote_host=127.0.0.1
+xdebug.remote_port=9000
+xdebug.profiler_enable_trigger=1
+\end{squashboxoutput}
+
+Restart Apache:
+
+\begin{squashboxcommand}
+sudo /etc/init.d/apache2 restart
+\end{squashboxcommand}
+
+PHP has a default memory limit of 128 megabytes. You can edit /etc/php/apache2/php.ini and /etc/php/cli/php.ini to up the memory limit for the webserver and CLI repectively.
 
 % ============================================================================
 \chapter{Development tools} \label{chdevtools}
@@ -254,18 +317,101 @@ Note that this version of \verb!php5-gd! uses the system GD library which doesn�
 sudo apt-get install netbeans
 \end{squashboxcommand}
 
-%    * sudo apt-get install git gitk git-gui
-%    * install firefox plugins
+0 upgraded, 97 newly installed, 0 to remove and 0 not upgraded.
+Need to get 175MB of archives.
+After this operation, 689MB of additional disk space will be used.
 
-% TODO : Memory settings from http://groups.drupal.org/node/70258
+Start NetBeans:
+
+\emph{Applications $\rightarrow$ Programming $\rightarrow$ NetBeans IDE 6.9}
+
+When you start NetBeans, you will be presented with a start page which shows NetBeans related news and blog posts. Uncheck \emph{Show On Startup} if you do not wish to see this page every time you launch NetBeans. You can always access the start page from the Help menu.
+
+Install PHP Plugin:
+
+\emph{Tools $\rightarrow$ Plugins $\rightarrow$ Available Plugins}
+
+Select the PHP plugin on the list and click the \emph{Install} button.
+
+Follow steps in wizard.
+
+When the installation process is finished, you must restart the IDE.
+
+\subsection{Configure NetBeans}
+
+Go to \emph{Tools $\rightarrow$ Options} to configure the global settings. Make the following changes on these tabs:
+
+    * Editor On the Formatting sub-tab set Number of Spaces per Indent to 2 and Tab Size to 2 to match the Drupal code style guidelines.
+    * PHP Uncheck the box Stop at the First Line.
+    * Miscellaneous On the Files tab you must add a couple of non-standard file extensions used by Drupal. Click New and add the following extensions: install, module, and profile. Set the file type of each extension to PHP (text/x-php5). This enables Find usages and code completion across all Drupal source files.
+
+Go to the Services tab, expand the Databases item and right-click on the MySQL Server at localhost entry and choose \emph{Properties}. If you can’t see the Services tab, go to \emph{Windows $\rightarrow$ Services} to enable it.
+
+Enter the MySQL password you chose when setting up the LAMP stack in the Administrator Password field and check the Save Password box. You are now connected to your local database server. If, for some reason, the connection is dropped, you can right-click on the MySQL Server at localhost entry and choose Connect to reconnect to the server.
 
 \section{Version control}
 
+\begin{squashboxcommand}
+sudo apt-get install git gitk git-gui
+\end{squashboxcommand}
+
+TODO: insert sample git-config
+
 \section{Firefox plugins}
+
+%    * install firefox plugins
+
+\section{Profiling tools}
+
+Webgrind, Siege and KCachegrind.
+
+\subsection{Webgrind}
+
+Grab the latest copy from GitHub and put it in the /var/www folder.
+
+\begin{squashboxcommand}
+sudo git clone git://github.com/jokkedk/webgrind.git /var/www/webgrind
+\end{squashboxcommand}
+
+Edit the hosts file
+
+\begin{squashboxcommand}
+sudo gedit /etc/hosts
+\end{squashboxcommand}
+
+and add the following line to it:
+
+\begin{squashboxoutput}
+127.0.0.1   webgrind
+\end{squashboxoutput}
+
+Create a new virtual host definition:
+
+\begin{squashboxcommand}
+sudo gedit /etc/apache2/sites-available/webgrind
+\end{squashboxcommand}
+
+And tell Apache to reload its configuration files
+
+\begin{squashboxcommand}
+sudo a2ensite webgrind
+\end{squashboxcommand}
+
+Open the \url{http://webgrind/} in your browser to verify that webgrind works.
+
+\subsection{Siege}
+
+\begin{squashboxcommand}
+sudo apt-get install siege
+\end{squashboxcommand}
 
 % ============================================================================
 \chapter{Install Drupal} \label{chinstalldrupal}
 \chapterprecis{Install the latest stable and development versions of Drupal.}
+
+\section{Drupal Core}
+
+\section{Drush}
 
 % ============================================================================
 \chapter{Caching} \label{chcaching}
@@ -278,11 +424,25 @@ sudo apt-get install php5-apc memcached varnish
 \part{Getting to work}
 
 % ============================================================================
+\chapter{Using NetBeans} \label{chusingnetbeans}
+\chapterprecis{}
+
+% ============================================================================
 \chapter{Debugging} \label{chdebugging}
 \chapterprecis{Speed up your development workflow with the installed tools.}
 
 % ============================================================================
 \chapter{Performance testing} \label{chperformance}
 \chapterprecis{Identify bottlenecks in your application and get an idea of how it performs under simulated loads.}
+
+\section{Profiling with Webgrind}
+
+To start the profiler, simply add \verb!?XDEBUG_PROFILE! to any URL on one of your local sites. The page will load normally, but Xdebug will create a \verb!cachegrind.out! file in the \verb!/tmp! folder.
+
+When the cachegrind file has been written you can go to \url{http://webgrind/} to start analyzing it. In the Webgrind window, you can either just press Update to analyze the latest cachegrind file or select a specific file from the drop down list.
+
+% TODO: Description of the Webgrind interface.
+
+\section{Load testing with Siege}
 
 \end{document}
