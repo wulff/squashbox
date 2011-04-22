@@ -1,5 +1,14 @@
 % custom commands and settings for the squashbox guide
 
+% http://en.wikibooks.org/wiki/LaTeX
+% http://dsanta.users.ch/resources/type1.html
+% http://nitens.org/taraborelli/cvtex
+% http://nitens.org/taraborelli/latex
+% http://www.tug.dk/FontCatalogue/
+% http://www.joachim-breitner.de/blog/archives/376-Diploma-Thesis-Finished.html
+
+% package: ifdraft.sty
+
 % --- SETUP ------------------------------------------------------------------
 
 % use tight spacing for all lists
@@ -42,8 +51,21 @@
 
 % we'll use helvetica, palatino, and courier instead of the default fonts
 \usepackage{helvet}
-\usepackage{palatino}
-\usepackage{courier}
+\usepackage{tgbonum} % a bookman-style font from the tex-gyre package
+\usepackage{couriers} % a slightly scaled version of the courier font
+
+% use palatino for the body text (doesn't have nice ligatures, though)
+%\usepackage{palatino}
+%\linespread{1.05} % use a little extra leading for palatine
+
+% other font alternatives
+%\usepackage{bera}
+%\usepackage{kpfonts}
+
+% suppress widows and orphans (http://en.wikipedia.org/wiki/Widows_and_orphans)
+\widowpenalty = 10000
+\displaywidowpenalty = 1000
+\clubpenalty = 10000
 
 % use a sans serif font for chapter and section headings
 \renewcommand*{\chaptitlefont}{\Huge\bfseries\sffamily\raggedright}
@@ -83,6 +105,35 @@
 % use a sans serif font for figure and table captions
 \captionnamefont{\small\sffamily}
 \captiontitlefont{\small\sffamily}
+
+% --- ENVIRONMENTS -----------------------------------------------------------
+
+% create a new, nicely indented version of the snugshade environment
+\newenvironment{squashboxsnugshade}{%
+  \def\FrameCommand{\colorbox{shadecolor}}%
+  \MakeFramed{\setlength{\hsize}{\snugwidth}\FrameRestore\@setminipage}}%
+  {\par\unskip\endMakeFramed}
+
+% render a command to be entered by the user
+\newenvironment{squashboxcommand}{%
+  \setverbatimfont{\normalfont\ttfamily\bfseries}%
+  \squashboxsnugshade%
+  \verbatim%
+}{%
+  \endverbatim%
+  \endsquashboxsnugshade%
+}
+
+% render terminal output
+% TODO: use boxedverbatim instead to allow for page breaks?
+\newenvironment{squashboxoutput}{%
+  \setverbatimfont{\normalfont\ttfamily\small}%
+  \squashboxsnugshade%
+  \verbatim%
+}{%
+  \endverbatim%
+  \endsquashboxsnugshade%
+}
 
 % --- COMMANDS ---------------------------------------------------------------
 
@@ -124,14 +175,6 @@
 \href{#1}{#2\footnote{\url{#1}}}%
 }
 
-% an arbitrary link in a shaded box
-\newcommand{\squashboxlink}[1]{%
-\begin{snugshade}
-\noindent
-\url{#1}
-\end{snugshade}
-}
-
 % insert a framed screenshot with a caption and a label
 \newcommand{\squashboxscreenshot}[3]{%
 \begin{figure}[!ht]
@@ -149,29 +192,10 @@
 \end{framed}
 }
 
-% create a new, nicely indented version of the snugshade environment
-\newenvironment{squashboxsnugshade}{%
-  \def\FrameCommand{\colorbox{shadecolor}}%
-  \MakeFramed{\setlength{\hsize}{\snugwidth}\FrameRestore\@setminipage}}%
-  {\par\unskip\endMakeFramed}
-
-% render a command to be entered by the user
-\newenvironment{squashboxcommand}{%
-  \setverbatimfont{\normalfont\ttfamily\bfseries}%
-  \squashboxsnugshade%
-  \verbatim%
-}{%
-  \endverbatim%
-  \endsquashboxsnugshade%
-}
-
-% render terminal output
-% TODO: use boxedverbatim instead to allow for page breaks?
-\newenvironment{squashboxoutput}{%
-  \setverbatimfont{\normalfont\ttfamily\small}%
-  \squashboxsnugshade%
-  \verbatim%
-}{%
-  \endverbatim%
-  \endsquashboxsnugshade%
+% an arbitrary link in a shaded box
+\newcommand{\squashboxlink}[1]{%
+\begin{squashboxsnugshade}
+\noindent
+\url{#1}
+\end{squashboxsnugshade}
 }

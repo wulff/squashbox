@@ -1,10 +1,17 @@
-\documentclass[ebook,10pt,twoside,openright]{memoir}
+\documentclass[draft,ebook,10pt,twoside,openright]{memoir}
+
+% use final,ebook,12pt,oneside when generating the e-book version
+
+% uncomment the following commands to print the book on A4 stock
+% you may want to add the showtrims option to include trim marks
+%\stockaiv
+%\checkandfixthelayout
 
 \usepackage[T1]{fontenc}
-%\usepackage[danish]{babel,varioref}
 \usepackage[utf8]{inputenc}
+\usepackage{textcomp}
 
-% include book-specific macros and settings
+% include project-specific macros and settings
 \usepackage{squashbox}
 
 % set title page content
@@ -19,6 +26,9 @@
 	            pdfdisplaydoctitle=true,%
 	            hypertexnames=false,%
 	            plainpages=false,%
+	            colorlinks=true,%
+	            linkcolor=blue,%
+	            urlcolor=blue,%
 	            pdftex]{hyperref}
 \else
 	\usepackage{hyperref}
@@ -47,7 +57,7 @@
 % ----------------------------------------------------------------------------
 \section*{Audience}
 
-This guide assumes that you know your way around your computer. You do not have to be a super user, but it will definitely help if you have tried installing a couple of CMS'es on your local machine or on shared hosting.
+This guide assumes that you know your way around your computer and that you have some experience developing software in PHP. You do not have to be a super user or a professional programmer, but it will definitely help if you have tried installing a couple of different content management systems on your local machine or on shared hosting.
 
 % TODO: expand this section
 
@@ -426,6 +436,23 @@ sudo /etc/init.d/apache2 reload
 \end{squashboxcommand}
 
 Open the \url{http://webgrind/} in your browser to verify that webgrind works.
+
+  To get nice call-graphs, you need to install the package:
+
+\begin{squashboxcommand}
+sudo apt-get install graphviz
+\end{squashboxcommand}
+
+And change the webgrind configuration file to point at the dot executable:
+
+\begin{squashboxoutput}
+$dotExecutable = "/usr/bin/dot";
+$
+\end{squashboxoutput}
+
+\subsection{XHProf}
+
+Install and configure XHProf.
 
 \subsection{Siege}
 
