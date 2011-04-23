@@ -3,7 +3,7 @@
 % use final,ebook,12pt,oneside when generating the e-book version
 
 % uncomment the following commands to print the book on A4 stock
-% you may want to add the showtrims option to include trim marks
+% you may want to add the showtrims class option to include trim marks
 %\stockaiv
 %\checkandfixthelayout
 
@@ -20,6 +20,7 @@
 \date{\today}
 
 % add extra options to hyperref if we're generating a pdf
+% http://en.wikibooks.org/wiki/LaTeX/Hyperlinks
 \ifpdf
 	\usepackage[pdfauthor={Morten Wulff},%
 	            pdftitle={\thetitle},%
@@ -32,8 +33,8 @@
 	            pdftex]{hyperref}
 \else
 	\usepackage{hyperref}
+%  \usepackage{memhfixc}
 \fi
-\usepackage{memhfixc}
 
 \begin{document}
 
@@ -85,9 +86,36 @@ Arrows are used to indicate navigation of a web site or application menus:
 
 This indicates that you should click on the link \emph{Structure}, then on the link \emph{Content types} and finally click on the link \emph{Add content type}.
 
-% TODO: add example for navigating netbeans menus.
+% TODO: add example for navigating netbeans menus
+
+% TODO: explain use of \ in commands and output
 
 \endgroup
+
+% ----------------------------------------------------------------------------
+\section*{Similar projects}
+
+\subsection*{TurnKey LAMP Stack Appliance}
+
+The TurnKey appliance is preconfigured to run the Apache web server, the MySQL database server, as well as the PHP, Python, and Perl scripting languages.
+
+\squashboxlink{http://www.turnkeylinux.org/lamp}
+
+You can either run it in a virtual machine, install it as the only operating system on a computer, or deploy it to the Amazon EC2 cloud.
+
+The appliance contains web-based tools for easy administration of Apache and MySQL, making it a good starting point for learning about configuring and using the LAMP stack.
+
+In addition to the LAMP appliance, TurnKey Linux provides ready-to-run appliances for running CMS'es like Drupal, Joomla, or WordPress as well as file, backup, and mail servers. Go to following URL to see the complete list of available appliances:
+
+\squashboxlink{http://www.turnkeylinux.org/all}
+
+\subsection*{Drupal Quickstart}
+
+Drupal Quickstart is a pre-packaged PHP development environment which is available as a VirtualBox appliance or as a set of scripts for setting up the environment on a clean Ubuntu install.
+
+\squashboxlink{http://drupal.org/project/quickstart}
+
+Even though this project is aimed at Drupal developers, you can use it to develop any kind of PHP-based software (although you may not be able to use the included utility scripts without modifications).
 
 \mainmatter
 
@@ -120,7 +148,7 @@ If you are planning to install Ubuntu on a spare machine or alongside your exist
 
 Multiple products are available for setting up virtual machines on your computer, e.g. \hreffoot{http://www.vmware.com/products/fusion/}{VMWare Fusion}, \hreffoot{http://www.vmware.com/products/workstation/}{VMWare Workstation}, and \hreffoot{http://www.parallels.com/eu/computing/}{Parallels Desktop}.
 
-This guide uses the open source VirtualBox products, which is available for Mac OS, Windows, and Linux. Go to the download page and pick the installation package that matches your operating system.
+This guide uses the open source VirtualBox package, which is available for Mac OS, Windows, and Linux. Go to the download page and pick the installation package that matches your operating system.
 
 \squashboxlink{http://www.virtualbox.org/wiki/Downloads}
 
@@ -238,7 +266,7 @@ sudo apt-get install lamp-server^
 When \verb!sudo! asks for a password, simply enter the password you created for your user account when you installed Ubuntu.
 
 Apt-get displays a list of the packages which are about to be installed. Answer yes or press enter to start the installation. Apt-get will then download and install the required packages.
-  
+
 As part of the installation process, you will be asked for a password for the MySQL root user. You will need this password to configure the database server later.
 
 Run the following command to install the remaining packages, which are not included in the meta-package:
@@ -376,13 +404,41 @@ Go to the Services tab, expand the Databases item and right-click on the MySQL S
 Enter the MySQL password you chose when setting up the LAMP stack in the Administrator Password field and check the Save Password box. You are now connected to your local database server. If, for some reason, the connection is dropped, you can right-click on the MySQL Server at localhost entry and choose Connect to reconnect to the server.
 
 % ----------------------------------------------------------------------------
-\section{Version control}
+\section{Git}
 
 \begin{squashboxcommand}
 sudo apt-get install git gitk git-gui
 \end{squashboxcommand}
 
-TODO: insert sample git-config
+\begin{squashboxoutput}
+[color]
+ui = auto
+
+[color "diff"]
+meta = cyan
+frag = yellow
+
+[core]
+whitespace = fix, -indent-with-non-tab, \
+  -indent-with-tab, trailing-space, cr-at-eol
+
+[push]
+default = tracking
+
+[alias]
+co = checkout
+ci = commit
+st = status
+br = branch
+w = whatchanged
+type = cat-file -t
+dump = cat-file -p
+\end{squashboxoutput}
+
+%lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+%hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+
+% http://www.turnkeylinux.org/revision-control
 
 % ----------------------------------------------------------------------------
 \section{Firefox plugins}
@@ -390,11 +446,9 @@ TODO: insert sample git-config
 %    * install firefox plugins
 
 % ----------------------------------------------------------------------------
-\section{Profiling tools}
+\section{Webgrind}
 
 In order to analyze the output files generated by the Xdebug profiler, you must install Webgrind or KCachegrind. This section helps you install both tools so you can decide which on fits your way of working.
-
-\subsection{Webgrind}
 
 First we have to get the latest copy of Webgrind. Since it is hosted on \hreffoot{https://github.com/}{GitHub} we can simply clone the repository to a folder in \verb!/var/www!.
 
@@ -450,11 +504,15 @@ $dotExecutable = "/usr/bin/dot";
 $
 \end{squashboxoutput}
 
-\subsection{XHProf}
+% TODO: KCacheGrind?
+
+% ----------------------------------------------------------------------------
+\section{XHProf}
 
 Install and configure XHProf.
 
-\subsection{Siege}
+% ----------------------------------------------------------------------------
+\section{Siege}
 
 \begin{squashboxcommand}
 sudo apt-get install siege
