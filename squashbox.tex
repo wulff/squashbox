@@ -7,9 +7,11 @@
 %\stockaiv
 %\checkandfixthelayout
 
+% TODO: use \textsc for stuff like Apache, MySQL, etc.
+
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage{textcomp} % not necessary when using the kpfonts package
+\usepackage{textcomp}
 
 % include project-specific macros and settings
 \usepackage{squashbox}
@@ -22,15 +24,16 @@
 % add extra options to hyperref if we're generating a pdf
 % http://en.wikibooks.org/wiki/LaTeX/Hyperlinks
 \ifpdf
-	\usepackage[pdfauthor={Morten Wulff},%
-	            pdftitle={\thetitle},%
-	            pdfdisplaydoctitle=true,%
-	            hypertexnames=false,%
-	            plainpages=false,%
-	            colorlinks=true,%
-	            linkcolor=blue,%
-	            urlcolor=blue,%
-	            pdftex]{hyperref}
+	\usepackage[%
+	  pdfauthor={\theauthor},%
+    pdftitle={\thetitle},%
+    pdfdisplaydoctitle=true,%
+    hypertexnames=false,%
+    plainpages=false,%
+    colorlinks=true,%
+    linkcolor=blue,%
+    urlcolor=blue,%
+    pdftex]{hyperref}
 \else
 	\usepackage{hyperref}
 %  \usepackage{memhfixc}
@@ -55,10 +58,18 @@
 % ============================================================================
 \chapter{Preface}
 
+This guide is an expansion and combination of two previous, smaller guides, which were primarily focused on setting up a Drupal development environment.
+
+The scope of this guide has been broadened to cover development and debugging of \textsc{php} applications in general, although it still contains a chapter which focuses on Drupal-specific development tools.
+
+Feedback and suggestions on how to improve this guide are highly appreciated. You can find my e-mail address at the top of the copyright page.
+
+% TODO: expand this section
+
 % ----------------------------------------------------------------------------
 \section*{Audience}
 
-This guide assumes that you know your way around your computer and that you have some experience developing software in PHP. You do not have to be a super user or a professional programmer, but it will definitely help if you have tried installing a couple of different content management systems on your local machine or on shared hosting.
+This guide assumes that you know your way around your computer and that you have some experience developing software in \textsc{php}. You do not have to be a super user or a professional programmer, but it will definitely help if you have tried installing a couple of different content management systems on your local machine or on shared hosting.
 
 % TODO: expand this section
 
@@ -74,7 +85,7 @@ This guide uses the following typographical conventions:
 \begin{description}
 \item[\normalfont\emph{Italic}] Indicates file names, folders, module and package names, new terms, and emphasized text.
 \item[\normalfont\texttt{Fixed width}] Indicates code, file contents, and terminal output.
-\item[\normalfont\textbf{\texttt{Fixed width}}] Indicates commands entered by the user.
+\item[\normalfont\textbf{\texttt{Fixed width}}] Indicates commands that you enter in the terminal to install packages, restart services, etc.
 \end{description}
 \end{squashboxsnugshade}
 
@@ -88,34 +99,43 @@ This indicates that you should click on the link \emph{Structure}, then on the l
 
 % TODO: add example for navigating netbeans menus
 
-% TODO: explain use of \ in commands and output
-
 \endgroup
+
+Some of the commands you have to enter in the terminal are too long to fit on a single line in this guide. In those cases, a backslash is used to indicate that the line has been broken into two or more parts, like in the following example:
+
+% TODO: explain use of \ in commands and output
+\begin{squashboxcommand}
+sudo apt-get install php5-apc memcached \
+  varnish
+\end{squashboxcommand}
+
+\noindent
+You can either enter the command exactly as it appears in the guide (with a linebreak after the backslash) or ignore the backslash and enter the entire command on one line.
 
 % ----------------------------------------------------------------------------
 \section*{Similar projects}
 
-\subsection*{TurnKey LAMP Stack Appliance}
+\subsection*{TurnKey \textsc{lamp} Stack Appliance}
 
-The TurnKey appliance is preconfigured to run the Apache web server, the MySQL database server, as well as the PHP, Python, and Perl scripting languages.
+The TurnKey appliance is preconfigured to run the Apache web server, the MySQL database server, as well as the \textsc{php}, Python, and Perl scripting languages.
 
 \squashboxlink{http://www.turnkeylinux.org/lamp}
 
-You can either run it in a virtual machine, install it as the only operating system on a computer, or deploy it to the Amazon EC2 cloud.
+You can either run it in a virtual machine, install it as the only operating system on a computer, or deploy it to the Amazon \textsc{ec2} cloud.
 
-The appliance contains web-based tools for easy administration of Apache and MySQL, making it a good starting point for learning about configuring and using the LAMP stack.
+The appliance contains web-based tools for easy administration of Apache and MySQL, making it a good starting point for learning about configuring and using the \textsc{LAMP} stack.
 
-In addition to the LAMP appliance, TurnKey Linux provides ready-to-run appliances for running CMS'es like Drupal, Joomla, or WordPress as well as file, backup, and mail servers. Go to following URL to see the complete list of available appliances:
+In addition to the \textsc{lamp} appliance, TurnKey Linux provides ready-to-run appliances for running popular content management systems like Drupal, Joomla, or WordPress as well as file, backup, and mail servers. Go to following URL to see the complete list of available appliances:
 
 \squashboxlink{http://www.turnkeylinux.org/all}
 
 \subsection*{Drupal Quickstart}
 
-Drupal Quickstart is a pre-packaged PHP development environment which is available as a VirtualBox appliance or as a set of scripts for setting up the environment on a clean Ubuntu install.
+Drupal Quickstart is a pre-packaged \textsc{php} development environment which is available as a VirtualBox appliance or as a set of scripts for setting up the environment on a clean Ubuntu install.
 
 \squashboxlink{http://drupal.org/project/quickstart}
 
-Even though this project is aimed at Drupal developers, you can use it to develop any kind of PHP-based software (although you may not be able to use the included utility scripts without modifications).
+Even though this project is aimed at Drupal developers, you can use it to develop any kind of \textsc{php}-based software (although you may not be able to use the included utility scripts without modifications).
 
 \mainmatter
 
@@ -123,7 +143,7 @@ Even though this project is aimed at Drupal developers, you can use it to develo
 
 % ============================================================================
 \chapter{Base system} \label{chbasesystem}
-\chapterprecis{Download the latest version of Ubuntu Desktop Edition and install it on a spare computer or a virtual machine.}
+\chapterprecis{Download the latest version of the Desktop Edition of Ubuntu, and install it on a spare computer or a virtual machine.}
 
 \noindent
 Before we get started you must decide if you want to install your development system on a physical machine (e.g. that spare laptop you have lying around) or in a virtual machine on your computer.
@@ -141,7 +161,7 @@ On the download page, simply click the \emph{Start download} button to download 
 
 \squashboxscreenshot{base/downloadubuntu.png}{Download the recommended version of Ubuntu}{figdownloadubuntu}
 
-If you are planning to install Ubuntu on a spare machine or alongside your existing operating system, you should follow the second step of the guide on the download page to either burn a CD or create a USB drive for installing Ubuntu.
+If you are planning to install Ubuntu on a spare machine or alongside your existing operating system, you should follow the second step of the guide on the download page to either burn a \textsc{cd} or create a \textsc{usb} drive for installing Ubuntu.
 
 % ----------------------------------------------------------------------------
 \section{Install VirtualBox} \label{secinstallvirtualbox}
@@ -158,35 +178,35 @@ When VirtualBox is installed, you can execute it and start configuring your firs
 
 \squashboxscreenshot{base/virtualboxwelcome.png}{VirtualBox manager}{figvirtualboxwelcome}
 
-In the VirtualBox Manager (see figure \ref{figvirtualboxwelcome}), click the \emph{New} button to start the \emph{Virtual Machine Wizard}. When you click \emph{Continue} on the first page of the wizard, it is time to select which operating system the virtual machine will be running and giving it a memorable name. We'll call the machine \emph{SquashBox} and tell the wizard that it will be running Ubuntu (see figure \ref{figvirtualboxwizardname}).
+In the VirtualBox Manager (see figure \ref{figvirtualboxwelcome}), click the \emph{New} button to start the \emph{Virtual Machine Wizard}. When you click \emph{Continue} on the first page of the wizard, it is time to select which operating system the virtual machine will be running and giving it a memorable name. We will call the machine \emph{SquashBox} and tell the wizard that it will be running Ubuntu (see figure \ref{figvirtualboxwizardname}).
 
 \squashboxscreenshot{base/virtualboxwizardname.png}{Naming your virtual machine}{figvirtualboxwizardname}
 
-Since this virtual machine will be used for development and debugging, we will assign 1024~MB of memory to it. If you have \emph{lots} of free memory, or if you plan to use the virtual machine as your primary development environment, you can increase this. The wizard indicates how much memory you can safely allocate to the virtual machine (see figure \ref{figvirtualboxwizardmemory}).
+Since this virtual machine will be used for development and debugging, we will assign 1024~\textsc{mb} of memory to it. If you have \emph{lots} of free memory, or if you plan to use the virtual machine as your primary development environment, you can increase this. The wizard indicates how much memory you can safely allocate to the virtual machine (see figure \ref{figvirtualboxwizardmemory}).
 
 \squashboxscreenshot{base/virtualboxwizardmemory.png}{Allocating memory to the virtual machine}{figvirtualboxwizardmemory}
 
-The next step is to create a virtual disk for the virtual machine. Instead of using a physical hard disk in your machine, the virtual machine uses one or more files on your file system to emulate a hard disk. We'll stick with the default settings and create a new hard disk with 8~GB of space (see figure \ref{figvirtualboxwizarddisk}).
+The next step is to create a virtual disk for the virtual machine. Instead of using a physical hard disk in your machine, the virtual machine uses one or more files on your file system to emulate a hard disk. We will stick with the default settings and create a new hard disk with 8~\textsc{gb} of space (see figure \ref{figvirtualboxwizarddisk}).
 
 \squashboxscreenshot{base/virtualboxwizarddisk.png}{Creating a virtual disk for the virtual machine}{figvirtualboxwizarddisk}
 
-Click \emph{Continue} to open the \emph{Create new virtual disk} wizard. You can choose between fixed-size storage and dynamically expanding storage. We'll choose the dynamic option to make sure that the virtual disk doesn't take up more space than necessary (see figure \ref{figvirtualboxwizarddisktype}).
+Click \emph{Continue} to open the \emph{Create new virtual disk} wizard. You can choose between fixed-size storage and dynamically expanding storage. We will choose the dynamic option to make sure that the virtual disk does not take up more space than necessary (see figure \ref{figvirtualboxwizarddisktype}).
 
 \squashboxscreenshot{base/virtualboxwizarddisktype.png}{Selecting the hard disk storage type}{figvirtualboxwizarddisktype}
 
-When you have selected a storage type, you can set the size and location of the virtual disk. By default, the virtual disk is placed in the same folder as the virtual machine definition. If you have enough free space on your hard disk you probably don't have to change the locations, but it can be handy if you want to put the virtual disk on another partition or drive (see figure \ref{figvirtualboxwizarddisklocation}). When you have reviewed the settings for the new disk, you can click \emph{Done} to create the disk and exit the wizard.
+When you have selected a storage type, you can set the size and location of the virtual disk. By default, the virtual disk is placed in the same folder as the virtual machine definition. If you have enough free space on your hard disk you probably do not have to change the locations, but it can be handy if you want to put the virtual disk on another partition or drive (see figure \ref{figvirtualboxwizarddisklocation}). When you have reviewed the settings for the new disk, you can click \emph{Done} to create the disk and exit the wizard.
 
 \squashboxscreenshot{base/virtualboxwizarddisklocation.png}{Selecting the location and size of the virtual disk}{figvirtualboxwizarddisklocation}
 
 Finally, you can review the settings of your new virtual machine and click \emph{Done} in the main wizard to create the machine and exit the wizard.
 
-Before you can boot your shiny new virtual machine, you have to make a few changes to its settings. Click the \emph{Settings} button in the VirtualBox Manager to change the display settings and attach the Ubuntu CD image you downloaded earlier.
+Before you can boot your shiny new virtual machine, you have to make a few changes to its settings. Click the \emph{Settings} button in the VirtualBox Manager to change the display settings and attach the Ubuntu \textsc{cd} image you downloaded earlier.
 
-Start by clicking the \emph{Display} tab and adding some video memory. We will make 64~MB available to the guest operating system (see figure \ref{figvirtualboxconfiguredisplay}).
+Start by clicking the \emph{Display} tab and adding some video memory. We will make 64~\textsc{mb} available to the guest operating system (see figure \ref{figvirtualboxconfiguredisplay}).
 
 \squashboxscreenshot{base/virtualboxconfiguredisplay.png}{Display settings}{figvirtualboxconfiguredisplay}
 
-To be able to boot from the Ubuntu CD image, you must attach it to the virtual machine. Go to the \emph{Storage} tab and select the empty slot beneath the IDE controller. Click the little disk icon next to the attributes dropdown, select \emph{Choose a virtual CD/DVD disk file}, and select the Ubuntu Desktop disk image (see figure \ref{figvirtualboxconfigurestorage}).
+To be able to boot from the Ubuntu \textsc{cd} image, you must attach it to the virtual machine. Go to the \emph{Storage} tab and select the empty slot beneath the \textsc{ide} controller. Click the little disk icon next to the attributes dropdown, select \emph{Choose a virtual \textscsl{cd/dvd} disk file}, and select the Ubuntu Desktop disk image (see figure \ref{figvirtualboxconfigurestorage}).
 
 \squashboxscreenshot{base/virtualboxconfigurestorage.png}{Storage settings}{figvirtualboxconfigurestorage}
 
@@ -197,7 +217,7 @@ Now you are ready to install Ubuntu Desktop Edition on your virtual machine!
 % ----------------------------------------------------------------------------
 \section{Install Ubuntu} \label{secinstallubuntu}
 
-To start the installation, select your virtual machine in the VirtualBox Manager (see figure \ref{figvirtualboxmanager}) and click the \emph{Start} button in the toolbar. The virtual machine will boot from the CD image you attached to it in the previous section.
+To start the installation, select your virtual machine in the VirtualBox Manager (see figure \ref{figvirtualboxmanager}) and click the \emph{Start} button in the toolbar. The virtual machine will boot from the \textsc{cd} image you attached to it in the previous section.
 
 % TODO: or boot from the CD or USB stick
 
@@ -235,14 +255,14 @@ When the installer has finished copying files and configuring the system, it is 
 
 The first time you start your machine, the Ubuntu Update Manager will examine your system and install all available updates. This can take a while. Once all updates have been installed you will have to restart your machine.
 
-\squashboxhint{If you are installing on a virtual machine, now would be a good time to detach the Ubuntu Desktop CD image. Go to the VirtualBox Manager and choose \emph{Settings $\rightarrow$ Storage}. Select the Ubuntu CD image, click the small CD icon next to the drive dropdown list and select \emph{Remove disk from virtual drive}.}
+\squashboxhint{If you are installing on a virtual machine, now would be a good time to detach the Ubuntu Desktop \textsc{cd} image. Go to the VirtualBox Manager and choose \emph{Settings $\rightarrow$ Storage}. Select the Ubuntu \textsc{cd} image, click the small \textsc{cd} icon next to the drive dropdown list and select \emph{Remove disk from virtual drive}.}
 
 % ----------------------------------------------------------------------------
 \section{Install VirtualBox tools} \label{secinstallvirtualboxtools}
 
 Once you have restarted your virtual machine and installed all available updates, you should take a few minutes to install the VirtualBox guest additions. These tools provide better integration between the guest operating system and the host operating system.
 
-To install the tools, choose \emph{Devices $\rightarrow$ Install Guest Additions}. This will mount a CD image containing the VirtualBox tools in your Ubuntu machine. Go to \emph{Places $\rightarrow$ VBOXADDITIONS} to open the root of the CD and click the \emph{Open Autorun Prompt} to run the software from the CD. When you click \emph{Run} in the dialog that opens, the install script will install the necessary modules and extensions to integrate Ubuntu with the host system.
+To install the tools, choose \emph{Devices $\rightarrow$ Install Guest Additions}. This will mount a \textsc{cd} image containing the VirtualBox tools in your Ubuntu machine. Go to \emph{Places $\rightarrow$ VBOXADDITIONS} to open the root of the \textsc{cd} and click the \emph{Open Autorun Prompt} to run the software from the \textsc{cd}. When you click \emph{Run} in the dialog that opens, the install script will install the necessary modules and extensions to integrate Ubuntu with the host system.
 
 When the installation script has finished it job, you should restart the virtual machine to enable the newly installed features.
 
@@ -250,14 +270,14 @@ When the installation script has finished it job, you should restart the virtual
 
 % ============================================================================
 \chapter{Servers} \label{chservers}
-\chapterprecis{Install a database server and a web server with scripting support.}
+\chapterprecis{Install a database server and a web server with support for the PHP scripting language.}
 
 \noindent
-When the Ubuntu installion is complete and all available updates have been installed, it’s time to install the server software required to run Drupal, WordPress, or other PHP-based software.
+When the Ubuntu installion is complete and all available updates have been installed, it’s time to install the server software required to run Drupal, WordPress, or other \textsc{php}-based software.
 
-We could install all the required software packages manually, but we are going to take advantage of the fact that Ubuntu provides a meta-package which installs the latest stable versions of the Apache web server, the MySQL database server and the PHP scripting language.
+We could install all the required software packages manually, but we are going to take advantage of the fact that Ubuntu provides a meta-package which installs the latest stable versions of the Apache web server, the MySQL database server and the \textsc{php} scripting language.
 
-Open a terminal window by going to \emph{Applications $\rightarrow$ Accessories $\rightarrow$ Terminal} and run the following command to install Apache, MySQL and PHP:
+Open a terminal window by going to \emph{Applications $\rightarrow$ Accessories $\rightarrow$ Terminal} and run the following command to install Apache, MySQL and \textsc{php}:
 
 \begin{squashboxcommand}
 sudo apt-get install lamp-server^
@@ -278,11 +298,11 @@ sudo apt-get install php5-gd php5-xdebug
 This command installs the following packages:
 
 \begin{description}
-\item[php5-gd] GD support for PHP
-\item[php5-xdebug] Xdebug support for PHP
+\item[php5-gd] GD support for \textsc{php}
+\item[php5-xdebug] Xdebug support for \textsc{php}
 \end{description}
 
-Note that this version of \verb!php5-gd! uses the system GD library which doesn’t include all the functions which are included in the version of GD which is bundled with PHP. This means that functions like \verb!imagefilter()! and \verb!imagerotate()! will not be available. If you need access to these functions, you can follow this guide to compile your own version of the php5-gd package:
+Note that this version of \verb!php5-gd! uses the system \textsc{gd} library which does not include all the functions which are included in the version of \textsc{gd} which is bundled with \textsc{php}. This means that functions like \verb!imagefilter()! and \verb!imagerotate()! will not be available. If you need access to these functions, you can follow this guide to compile your own version of the \verb!php5-gd! package:
 
 \squashboxlink{http://cumu.li/2008/5/13/recompiling-php5-with-bundled-support-for-gd-on-ubuntu}
 
@@ -315,7 +335,8 @@ mysql -u root -p
 Create a squashbox user:
 
 \begin{squashboxcommand}
-CREATE USER squashbox@localhost IDENTIFIED BY 'squashbox';
+CREATE USER squashbox@localhost \
+  IDENTIFIED BY 'squashbox';
 FLUSH PRIVILEGES;
 EXIT
 \end{squashboxcommand}
@@ -327,7 +348,7 @@ mysql -usquashbox -psquashbox
 \end{squashboxcommand}
 
 % ----------------------------------------------------------------------------
-\section{Configure PHP}
+\section{Configure \textsc{php}}
 
 \subsection{Xdebug}
 
@@ -639,6 +660,11 @@ To start the profiler, simply add \verb!?XDEBUG_PROFILE! to any URL on one of yo
 When the cachegrind file has been written you can go to \url{http://webgrind/} to start analyzing it. In the Webgrind window, you can either just press Update to analyze the latest cachegrind file or select a specific file from the drop down list.
 
 % TODO: Description of the Webgrind interface.
+
+% ----------------------------------------------------------------------------
+\section{Profiling with XHProf}
+
+\subsection{Profiling from Drupal}
 
 % ----------------------------------------------------------------------------
 \section{Load testing with Siege}

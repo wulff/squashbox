@@ -7,6 +7,8 @@
 % http://www.tug.dk/FontCatalogue/
 % http://www.joachim-breitner.de/blog/archives/376-Diploma-Thesis-Finished.html
 
+% http://contrapunctus.net/league/haques/fs500tex/
+
 % package: ifdraft.sty
 
 % --- SETUP ------------------------------------------------------------------
@@ -40,7 +42,7 @@
 \hangsecnum
 
 % define a light gray background color for shaded boxes
-\definecolor{shadecolor}{rgb}{0.96,0.96,0.96}
+\definecolor{shadecolor}{rgb}{0.94,0.94,0.94}
 
 % define the width of the custom snugshade environment
 \newlength{\snugwidth}%
@@ -50,9 +52,9 @@
 % --- FONTS ------------------------------------------------------------------
 
 % we'll use helvetica, "bookman", and courier instead of the default fonts
-\usepackage{helvet}
-\usepackage{tgbonum} % a bookman-style font from the tex-gyre package
-\usepackage{couriers} % a slightly scaled version of the courier font
+%\usepackage{helvet}
+%\usepackage{tgbonum} % a bookman-style font from the tex-gyre package
+%\usepackage{couriers} % a slightly scaled version of the courier font
 
 % use palatino for the body text (doesn't have nice ligatures, though)
 %\usepackage{palatino}
@@ -60,7 +62,15 @@
 
 % other font alternatives
 %\usepackage{bera}
-%\usepackage{kpfonts}
+\usepackage[largesmallcaps,light,notextcomp,oldstyle]{kpfonts}
+
+% redefine \classicstylenums, since there's a syntax error in the version
+% provided by the package
+\def\classicstylenums#1{{\fontfamily{jkp\kp@stylemath\kp@famillem}\selectfont #1}}
+
+% define a command similar to \classicstylenums which works for sans serif
+% font (e.g. the headers and footers)
+\def\classicstylenumsserif#1{{\fontfamily{jkpss}\selectfont #1}}
 
 % suppress widows and orphans (http://en.wikipedia.org/wiki/Widows_and_orphans)
 \widowpenalty = 10000
@@ -81,12 +91,12 @@
 \renewcommand*{\cftsectionpagefont}{\sffamily}
 
 % use a sans serif font for page headings
-\makeevenhead{headings}{\sffamily\thepage}{}{\sffamily\leftmark}
-\makeoddhead{headings}{\sffamily\rightmark}{}{\sffamily\thepage}
+\makeevenhead{headings}{\sffamily\classicstylenumsserif{\thepage}}{}{\sffamily\classicstylenumsserif{\leftmark}}
+\makeoddhead{headings}{\sffamily\classicstylenumsserif{\rightmark}}{}{\sffamily\classicstylenumsserif{\thepage}}
 \makeheadrule{headings}{\textwidth}{\normalrulethickness}
 
 % use a sans serif font for chapter footers
-\makeoddfoot{plain}{}{\sffamily\thepage}{}
+\makeoddfoot{plain}{}{\sffamily\classicstylenumsserif{\thepage}}{}
 
 % remove chapter precis indentation in toc
 \renewcommand*{\precistocfont}{\normalfont\itshape\noindent}
