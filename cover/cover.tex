@@ -1,0 +1,90 @@
+\documentclass[final,ebook,17pt,oneside,extrafontsizes]{memoir}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+
+% enable color support
+\usepackage[pdftex]{xcolor}
+
+% add barcode support
+\usepackage[ISBN=978-87-994376-0-3]{ean13isbn}
+
+% add barcode support
+%\input ean13
+
+% set title page content
+\title{SquashBox}
+\author{Morten Wulff}
+\date{\today}
+
+% define peytz colors
+\definecolor{peytzorange}{HTML}{FF6000}
+\definecolor{peytzasphalt}{HTML}{2A2A2A}
+\definecolor{peytzdarkgray}{HTML}{404040}
+\definecolor{peytzlightgray}{HTML}{8A8A8A}
+\definecolor{peytzoffwhite}{HTML}{F3F3F3}
+
+% use the kepler font package
+\usepackage[largesmallcaps,light,notextcomp,oldstyle]{kpfonts}
+
+% add extra options to hyperref if we're generating a pdf
+% http://en.wikibooks.org/wiki/LaTeX/Hyperlinks
+\ifpdf
+	\usepackage[%
+	  pdfauthor={\theauthor},%
+    pdftitle={\thetitle},%
+    pdfdisplaydoctitle=true,%
+    hypertexnames=false,%
+    plainpages=false,%
+    colorlinks=true,%
+    linkcolor=blue,%
+    urlcolor=blue,%
+    pdftex]{hyperref}
+\else
+	\usepackage{hyperref}
+%  \usepackage{memhfixc}
+\fi
+
+% use tight spacing for all lists
+\tightlists
+
+\begin{document}
+
+\pagecolor{peytzorange}
+\color{white}
+
+% ============================================================================
+
+% front cover
+\vspace*{0em}
+\begin{flushright}
+\sffamily\scshape\bfseries\Huge\thetitle\par
+\end{flushright}
+\vspace*{\fill}
+\begin{flushright}
+\sffamily{Morten Wulff}
+\end{flushright}
+\thispagestyle{empty}
+\clearpage
+
+% ============================================================================
+
+% back cover
+
+\footnotesize
+
+\begin{itemize}
+\item How to install a basic Ubuntu desktop system
+\item How to install the necessary server components
+\item How to install the free NetBeans development environment
+\end{itemize}
+
+\noindent
+\emph{Morten Wulff works as a Drupal developer at Copenhagen consultancy Peytz~\&~Co.}
+
+\vspace*{\fill}
+\hspace*{\fill}\EANisbn
+\thispagestyle{empty}
+
+\end{document}
