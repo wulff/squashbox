@@ -27,6 +27,8 @@
 % enable color support
 \usepackage[pdftex]{xcolor}
 
+% \input ean13
+
 % set width of screenshots
 \newlength{\screenshotwidth}
 \setlength{\screenshotwidth}{0.8\textwidth}
@@ -42,7 +44,14 @@
 \hangsecnum
 
 % define a light gray background color for shaded boxes
-\definecolor{shadecolor}{rgb}{0.94,0.94,0.94}
+\definecolor{shadecolor}{rgb}{0.96,0.96,0.96}
+
+% define peytz colors
+\definecolor{peytzorange}{HTML}{FF6000}
+\definecolor{peytzasphalt}{HTML}{2A2A2A}
+\definecolor{peytzdarkgray}{HTML}{404040}
+\definecolor{peytzlightgray}{HTML}{8A8A8A}
+\definecolor{peytzoffwhite}{HTML}{F3F3F3}
 
 % define the width of the custom snugshade environment
 \newlength{\snugwidth}%
@@ -70,7 +79,7 @@
 
 % define a command similar to \classicstylenums which works for sans serif
 % font (e.g. the headers and footers)
-\def\classicstylenumsserif#1{{\fontfamily{jkpss}\selectfont #1}}
+\def\classicstylenumsss#1{{\fontfamily{jkpss}\selectfont #1}}
 
 % suppress widows and orphans (http://en.wikipedia.org/wiki/Widows_and_orphans)
 \widowpenalty = 10000
@@ -91,12 +100,12 @@
 \renewcommand*{\cftsectionpagefont}{\sffamily}
 
 % use a sans serif font for page headings
-\makeevenhead{headings}{\sffamily\classicstylenumsserif{\thepage}}{}{\sffamily\classicstylenumsserif{\leftmark}}
-\makeoddhead{headings}{\sffamily\classicstylenumsserif{\rightmark}}{}{\sffamily\classicstylenumsserif{\thepage}}
+\makeevenhead{headings}{\sffamily\classicstylenumsss{\thepage}}{}{\sffamily\classicstylenumsss{\leftmark}}
+\makeoddhead{headings}{\sffamily\classicstylenumsss{\rightmark}}{}{\sffamily\classicstylenumsss{\thepage}}
 \makeheadrule{headings}{\textwidth}{\normalrulethickness}
 
 % use a sans serif font for chapter footers
-\makeoddfoot{plain}{}{\sffamily\classicstylenumsserif{\thepage}}{}
+\makeoddfoot{plain}{}{\sffamily\classicstylenumsss{\thepage}}{}
 
 % remove chapter precis indentation in toc
 \renewcommand*{\precistocfont}{\normalfont\itshape\noindent}
@@ -129,6 +138,8 @@
   \setverbatimfont{\normalfont\ttfamily\bfseries}%
   \squashboxsnugshade%
   \verbatim%
+  \fontfamily{jkptt}%
+  \selectfont%
 }{%
   \endverbatim%
   \endsquashboxsnugshade%
@@ -140,6 +151,8 @@
   \setverbatimfont{\normalfont\ttfamily\small}%
   \squashboxsnugshade%
   \verbatim%
+  \fontfamily{jkptt}%
+  \selectfont%
 }{%
   \endverbatim%
   \endsquashboxsnugshade%

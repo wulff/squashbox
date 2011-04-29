@@ -1,13 +1,11 @@
-\documentclass[draft,ebook,10pt,twoside,openright]{memoir}
-
-% use final,ebook,12pt,oneside when generating the e-book version
+%\documentclass[draft,ebook,10pt,twoside,openright]{memoir}
+\documentclass[final,ebook,10pt,twoside,openright]{memoir}
 
 % uncomment the following commands to print the book on A4 stock
 % you may want to add the showtrims class option to include trim marks
 %\stockaiv
+%\settrims{3.42cm}{2.88cm} % use this to center the page on the A4 stock
 %\checkandfixthelayout
-
-% TODO: use \textsc for stuff like Apache, MySQL, etc.
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -31,8 +29,8 @@
     hypertexnames=false,%
     plainpages=false,%
     colorlinks=true,%
-    linkcolor=blue,%
-    urlcolor=blue,%
+    linkcolor=peytzorange,%
+    urlcolor=peytzorange,%
     pdftex]{hyperref}
 \else
 	\usepackage{hyperref}
@@ -56,9 +54,10 @@
 \endgroup
 
 % ============================================================================
-\chapter{Preface}
+\chapter{Preface} % (fold)
+\label{cha:Preface}
 
-This guide is an expansion and combination of two previous, smaller guides, which were primarily focused on setting up a Drupal development environment.
+This guide is an expansion and combination of a couple of smaller and more specific guides, which were primarily focused on setting up a Drupal development environment.
 
 The scope of this guide has been broadened to cover development and debugging of \textsc{php} applications in general, although it still contains a chapter which focuses on Drupal-specific development tools.
 
@@ -68,6 +67,7 @@ Feedback and suggestions on how to improve this guide are highly appreciated. Yo
 
 % ----------------------------------------------------------------------------
 \section*{Audience}
+\label{sec:Audience}
 
 This guide assumes that you know your way around your computer and that you have some experience developing software in \textsc{php}. You do not have to be a super user or a professional programmer, but it will definitely help if you have tried installing a couple of different content management systems on your local machine or on shared hosting.
 
@@ -75,6 +75,7 @@ This guide assumes that you know your way around your computer and that you have
 
 % ----------------------------------------------------------------------------
 \section*{Conventions used in this guide}
+\label{sec:Conventions used in this guide}
 
 \begingroup
 \setlength{\parindent}{0pt}
@@ -114,6 +115,7 @@ You can either enter the command exactly as it appears in the guide (with a line
 
 % ----------------------------------------------------------------------------
 \section*{Similar projects}
+\label{sec:Similar projects}
 
 \subsection*{TurnKey \textsc{lamp} Stack Appliance}
 
@@ -125,7 +127,7 @@ You can either run it in a virtual machine, install it as the only operating sys
 
 The appliance contains web-based tools for easy administration of Apache and MySQL, making it a good starting point for learning about configuring and using the \textsc{LAMP} stack.
 
-In addition to the \textsc{lamp} appliance, TurnKey Linux provides ready-to-run appliances for running popular content management systems like Drupal, Joomla, or WordPress as well as file, backup, and mail servers. Go to following URL to see the complete list of available appliances:
+In addition to the \textsc{lamp} appliance, TurnKey Linux provides ready-to-run appliances for running popular content management systems like Drupal, Joomla, or WordPress as well as file, backup, and mail servers. The following URL has the complete list of available appliances:
 
 \squashboxlink{http://www.turnkeylinux.org/all}
 
@@ -137,34 +139,41 @@ Drupal Quickstart is a pre-packaged \textsc{php} development environment which i
 
 Even though this project is aimed at Drupal developers, you can use it to develop any kind of \textsc{php}-based software (although you may not be able to use the included utility scripts without modifications).
 
+% chapter Preface (end)
+
 \mainmatter
 
 \part{Setting up shop}
 
 % ============================================================================
-\chapter{Base system} \label{chbasesystem}
+\chapter{Base system} % (fold)
+\label{cha:Base system}
 \chapterprecis{Download the latest version of the Desktop Edition of Ubuntu, and install it on a spare computer or a virtual machine.}
 
 \noindent
 Before we get started you must decide if you want to install your development system on a physical machine (e.g. that spare laptop you have lying around) or in a virtual machine on your computer.
 
-If you decide to install on a physical machine, you only need to read the sections \emph{Download Ubuntu} on page \ref{secdownloadubuntu} and \emph{Install Ubuntu} on page \ref{secinstallubuntu}.
+If you decide to install on a physical machine, you only need to read the sections \emph{Download Ubuntu} on page \ref{sec:Download Ubuntu} and \emph{Install Ubuntu} on page \ref{sec:Install Ubuntu}.
 
 % ----------------------------------------------------------------------------
-\section{Download Ubuntu} \label{secdownloadubuntu}
+\section{Download Ubuntu}
+\label{sec:Download Ubuntu}
 
-To get started, you need to download the latest version of the Ubuntu Desktop Edition (currently, this is version 10.10, nicknamed Maverick Meerkat). Go to the Ubuntu site and click the big \emph{Download Ubuntu} button.
+To get started, you need to download the latest version of the Ubuntu Desktop Edition (currently, this is version 11.04, nicknamed Natty Narwhal). Go to the Ubuntu site and click the big \emph{Download Ubuntu} button.
 
 \squashboxlink{http://www.ubuntu.com/}
 
-On the download page, simply click the \emph{Start download} button to download the default version of the Desktop Edition.
+On the download page, simply click the \emph{Start download} button to download a \textsc{cd} image of the default version of the Desktop Edition.
 
-\squashboxscreenshot{base/downloadubuntu.png}{Download the recommended version of Ubuntu}{figdownloadubuntu}
+\squashboxscreenshot{base/download-02-start.png}{Download the recommended version of Ubuntu}{figdownloadubuntu}
 
-If you are planning to install Ubuntu on a spare machine or alongside your existing operating system, you should follow the second step of the guide on the download page to either burn a \textsc{cd} or create a \textsc{usb} drive for installing Ubuntu.
+The \textsc{cd} image is around 700 megabytes and can either be burned to a disk or attached to a virtual machine.
+
+If you are planning to install Ubuntu on a spare machine or alongside your existing operating system, you should follow the second step of the guide -- \emph{Burn your CD or create a USB drive} -- on the download page to either burn a \textsc{cd} or create a \textsc{usb} drive for installing Ubuntu.
 
 % ----------------------------------------------------------------------------
-\section{Install VirtualBox} \label{secinstallvirtualbox}
+\section{Install VirtualBox}
+\label{sec:Install VirtualBox}
 
 Multiple products are available for setting up virtual machines on your computer, e.g. \hreffoot{http://www.vmware.com/products/fusion/}{VMWare Fusion}, \hreffoot{http://www.vmware.com/products/workstation/}{VMWare Workstation}, and \hreffoot{http://www.parallels.com/eu/computing/}{Parallels Desktop}.
 
@@ -215,7 +224,8 @@ Now you are ready to install Ubuntu Desktop Edition on your virtual machine!
 \squashboxscreenshot{base/virtualboxmanager.png}{VirtualBox Manager}{figvirtualboxmanager}
 
 % ----------------------------------------------------------------------------
-\section{Install Ubuntu} \label{secinstallubuntu}
+\section{Install Ubuntu}
+\label{sec:Install Ubuntu}
 
 To start the installation, select your virtual machine in the VirtualBox Manager (see figure \ref{figvirtualboxmanager}) and click the \emph{Start} button in the toolbar. The virtual machine will boot from the \textsc{cd} image you attached to it in the previous section.
 
@@ -258,7 +268,8 @@ The first time you start your machine, the Ubuntu Update Manager will examine yo
 \squashboxhint{If you are installing on a virtual machine, now would be a good time to detach the Ubuntu Desktop \textsc{cd} image. Go to the VirtualBox Manager and choose \emph{Settings $\rightarrow$ Storage}. Select the Ubuntu \textsc{cd} image, click the small \textsc{cd} icon next to the drive dropdown list and select \emph{Remove disk from virtual drive}.}
 
 % ----------------------------------------------------------------------------
-\section{Install VirtualBox tools} \label{secinstallvirtualboxtools}
+\section{Install VirtualBox tools}
+\label{sec:Install VirtualBox tools}
 
 Once you have restarted your virtual machine and installed all available updates, you should take a few minutes to install the VirtualBox guest additions. These tools provide better integration between the guest operating system and the host operating system.
 
@@ -268,9 +279,12 @@ When the installation script has finished it job, you should restart the virtual
 
 \squashboxhint{The VirtualBox tools make it easy to acces folders on the host machine from the virtual machine, and makes it easy to change the screen resolution of the virtual machine by simply changing the size of the window it is running in.}
 
+% chapter Base system (end)
+
 % ============================================================================
-\chapter{Servers} \label{chservers}
-\chapterprecis{Install a database server and a web server with support for the PHP scripting language.}
+\chapter{Servers} % (fold)
+\label{cha:Servers}
+\chapterprecis{Install a database server and a web server with support for the \textsc{php} scripting language.}
 
 \noindent
 When the Ubuntu installion is complete and all available updates have been installed, it’s time to install the server software required to run Drupal, WordPress, or other \textsc{php}-based software.
@@ -298,16 +312,19 @@ sudo apt-get install php5-gd php5-xdebug
 This command installs the following packages:
 
 \begin{description}
-\item[php5-gd] GD support for \textsc{php}
+\item[php5-gd] \textsc{gd} support for \textsc{php}
 \item[php5-xdebug] Xdebug support for \textsc{php}
 \end{description}
 
-Note that this version of \verb!php5-gd! uses the system \textsc{gd} library which does not include all the functions which are included in the version of \textsc{gd} which is bundled with \textsc{php}. This means that functions like \verb!imagefilter()! and \verb!imagerotate()! will not be available. If you need access to these functions, you can follow this guide to compile your own version of the \verb!php5-gd! package:
+Note that this version of \verb!php5-gd! uses the system \textsc{gd} library which does not include all the functions which are included in the version of \textsc{gd} bundled with \textsc{php}. This means that functions like \verb!imagefilter()! and \verb!imagerotate()! will not be available. If you need access to these functions, you can follow this guide to compile your own version of the \verb!php5-gd! package:
 
 \squashboxlink{http://cumu.li/2008/5/13/recompiling-php5-with-bundled-support-for-gd-on-ubuntu}
 
 % ----------------------------------------------------------------------------
 \section{Configure Apache}
+\label{sec:Configure Apache}
+
+Most content manangement systems and frameworks use fairly ugly default URLs (e.g. Drupal uses URLs on the form \verb!?q=admin/content!).
 
 Enable mod\_expires and mod\_rewrite:
 
@@ -323,6 +340,7 @@ sudo /etc/init.d/apache2 restart
 
 % ----------------------------------------------------------------------------
 \section{Configure MySQL}
+\label{sec:Configure MySQL}
 
 Nothing to configure, but take a look at the Mercury project.
 
@@ -349,6 +367,7 @@ mysql -usquashbox -psquashbox
 
 % ----------------------------------------------------------------------------
 \section{Configure \textsc{php}}
+\label{sec:Configure PHP}
 
 \subsection{Xdebug}
 
@@ -381,12 +400,16 @@ sudo /etc/init.d/apache2 restart
 
 PHP has a default memory limit of 128 megabytes. You can edit /etc/php/apache2/php.ini and /etc/php/cli/php.ini to up the memory limit for the webserver and CLI repectively.
 
+% chapter Servers (end)
+
 % ============================================================================
-\chapter{Development tools} \label{chdevtools}
+\chapter{Development tools} % (fold)
+\label{cha:Development tools}
 \chapterprecis{Install an integrated development environment and a selection of useful browser plugins.}
 
 % ----------------------------------------------------------------------------
 \section{NetBeans}
+\label{sec:NetBeans}
 
 \begin{squashboxcommand}
 sudo apt-get install netbeans
@@ -426,6 +449,7 @@ Enter the MySQL password you chose when setting up the LAMP stack in the Adminis
 
 % ----------------------------------------------------------------------------
 \section{Git}
+\label{sec:Git}
 
 \begin{squashboxcommand}
 sudo apt-get install git gitk git-gui
@@ -463,18 +487,36 @@ dump = cat-file -p
 
 % ----------------------------------------------------------------------------
 \section{Firefox plugins}
+\label{sec:Firefox plugins}
+
+\subsection{Firebug}
+
+\subsection{Web Developer}
+
+\subsection{FirePHP}
+
+\subsection{Live \textsc{HTTP} headers}
+
+\subsection{YSlow}
+
+\subsection{CodeBurner}
+
+\subsection{DrupalForFirebug}
 
 %    * install firefox plugins
 
 % ----------------------------------------------------------------------------
 \section{Webgrind}
+\label{sec:Webgrind}
 
 In order to analyze the output files generated by the Xdebug profiler, you must install Webgrind or KCachegrind. This section helps you install both tools so you can decide which on fits your way of working.
 
 First we have to get the latest copy of Webgrind. Since it is hosted on \hreffoot{https://github.com/}{GitHub} we can simply clone the repository to a folder in \verb!/var/www!.
 
 \begin{squashboxcommand}
-sudo git clone git://github.com/jokkedk/webgrind.git /var/www/webgrind
+sudo git clone \
+  git://github.com/jokkedk/webgrind.git \
+  /var/www/webgrind
 \end{squashboxcommand}
 
 Next, we’ll add a hostname for the local webgrind installation. Open a terminal window and run the following command to open the hosts file in a text editor:
@@ -500,8 +542,20 @@ It is a good idea to use the hostname as the name of the virtual host file. This
 Enter the following virtual host definition and save the file:
 
 \begin{squashboxoutput}
-% TODO: insert actial vhost configuration
+<VirtualHost *:80>
+  ServerAdmin webmaster@localhost # FIXME: remove
+  ServerName webgrind
+
+  DocumentRoot /var/www/webgrind
+
+  <Directory />
+    Options FollowSymLinks # FIXME: remove
+    AllowOverride All
+  </Directory>
+</VirtualHost>
 \end{squashboxoutput}
+
+% TODO: link to virtual host help doc
 
 When you have saved the file, you must run the following commands in a terminal window to enable the new virtual host and reload the Apache configuration files:
 
@@ -520,27 +574,31 @@ sudo apt-get install graphviz
 
 And change the webgrind configuration file to point at the dot executable:
 
-\begin{squashboxoutput}
+\begin{squashboxcommand}
 $dotExecutable = "/usr/bin/dot";
-$
-\end{squashboxoutput}
+\end{squashboxcommand}
 
 % TODO: KCacheGrind?
 
 % ----------------------------------------------------------------------------
 \section{XHProf}
+\label{sec:XHProf}
 
 Install and configure XHProf.
 
 % ----------------------------------------------------------------------------
 \section{Siege}
+\label{sec:Siege}
 
 \begin{squashboxcommand}
 sudo apt-get install siege
 \end{squashboxcommand}
 
+% chapter Development tools (end)
+
 % ============================================================================
-\chapter{Install Drupal} \label{chinstalldrupal}
+\chapter{Install Drupal} % (fold)
+\label{cha:Install Drupal}
 \chapterprecis{Install the latest stable and development versions of Drupal.}
 
 % ----------------------------------------------------------------------------
@@ -549,18 +607,24 @@ sudo apt-get install siege
 % ----------------------------------------------------------------------------
 \section{Drush}
 
+% chapter Install Drupal (end)
+
 % ============================================================================
-\chapter{Caching} \label{chcaching}
+\chapter{Caching} % (fold)
+\label{cha:Caching}
 \chapterprecis{Install an opcode cache and a reverse proxy server.}
 
 \begin{squashboxcommand}
 sudo apt-get install php5-apc memcached varnish
 \end{squashboxcommand}
 
+% chapter Caching (end)
+
 \part{Getting to work}
 
 % ============================================================================
-\chapter{Using NetBeans} \label{chusingnetbeans}
+\chapter{Using NetBeans} % (fold)
+\label{cha:Using NetBeans}
 \chapterprecis{}
 
 If you haven’t changed any settings, NetBeans will show the following windows on startup:
@@ -642,22 +706,41 @@ F7 	Step into 	Like step over, but steps into any functions it encounters
 CTRL+F7 	Step out 	Steps out of a function which has previously been stepped into
 F4 	Run to cursor 	Runs until the current line of execution is on the same line as a cursor (this is useful to skip past big blocks of uninteresting code)
 
-% ============================================================================
-\chapter{Debugging} \label{chdebugging}
-\chapterprecis{Speed up your development workflow with the installed tools.}
+% chapter Using NetBeans (end)
 
 % ============================================================================
-\chapter{Performance testing} \label{chperformance}
+\chapter{Debugging} % (fold)
+\label{cha:Debugging}
+\chapterprecis{Speed up your development workflow with the installed tools.}
+
+% chapter Debugging (end)
+
+% ============================================================================
+\chapter{Performance testing} % (fold)
+\label{cha:Performance testing}
 \chapterprecis{Identify bottlenecks in your application and get an idea of how it performs under simulated loads.}
 
 % ----------------------------------------------------------------------------
 \section{Profiling with Webgrind}
+\label{sec:Profiling with Webgrind}
 
 In addition to doing step through debugging, you can also use Xdebug to profile your code. Profiling your code lets you see which functions use most of the execution time, making it easy to spot candidates for optimization.
 
-To start the profiler, simply add \verb!?XDEBUG_PROFILE! to any URL on one of your local sites. The page will load normally, but Xdebug will create a \verb!cachegrind.out! file in the \verb!/tmp! folder.
+This is a two-step process: First you use Xdebug to generate a cachegrind output file. Then, you use a tool like Webgrind or Kcachegrind to analyze the output file.
+
+If you have followed the \textsc{PHP} configuration guide (see section \ref{sec:Configure PHP} on page \pageref{sec:Configure PHP}) you should have the following line in your \verb!xdebug.ini! file:
+
+\begin{squashboxoutput}
+xdebug.profiler_enable_trigger=1
+\end{squashboxoutput}
+
+This setting makes it possible to start the profiler by adding a query parameter to the \textsc{url}. To start the profiler, simply add \verb!?XDEBUG_PROFILE! to any \textsc{url} on one of your local sites. The page will load normally, but Xdebug will create a \verb!cachegrind.out! file in the \verb!/tmp! folder.
+
+\squashboxlink{http://drupal/admin?XDEBUG_PROFILE}
 
 When the cachegrind file has been written you can go to \url{http://webgrind/} to start analyzing it. In the Webgrind window, you can either just press Update to analyze the latest cachegrind file or select a specific file from the drop down list.
+
+After processing the file Webgrind displays a list of all the functions which were called to build the current page.
 
 % TODO: Description of the Webgrind interface.
 
@@ -668,5 +751,12 @@ When the cachegrind file has been written you can go to \url{http://webgrind/} t
 
 % ----------------------------------------------------------------------------
 \section{Load testing with Siege}
+
+% chapter Performance testing (end)
+
+%\appendix
+%\renewcommand{\appendixname}{Appendiks}
+
+%\part*{Appendiks}
 
 \end{document}
