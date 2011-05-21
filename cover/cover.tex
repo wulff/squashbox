@@ -21,6 +21,7 @@
 \definecolor{peytzdarkgray}{HTML}{404040}
 \definecolor{peytzlightgray}{HTML}{8A8A8A}
 \definecolor{peytzoffwhite}{HTML}{F3F3F3}
+\definecolor{ratatoskbrown}{HTML}{883400}
 
 % use the kepler font package
 \usepackage[largesmallcaps,light,notextcomp,oldstyle]{kpfonts}
@@ -48,12 +49,11 @@
 
 \begin{document}
 
-\pagecolor{peytzorange}
+\pagecolor{ratatoskbrown}
 \color{white}
 
-% ============================================================================
+% front cover ================================================================
 
-% front cover
 \vspace*{0em}
 \begin{flushright}
 \sffamily\scshape\bfseries\Huge\thetitle\par
@@ -65,9 +65,7 @@
 \thispagestyle{empty}
 \clearpage
 
-% ============================================================================
-
-% back cover
+% back cover =================================================================
 
 \footnotesize
 
@@ -80,6 +78,8 @@
 \noindent
 \emph{Morten Wulff works as a Drupal developer at Copenhagen consultancy Peytz~\&~Co.}
 
+% TODO change color to black and draw a white box around the barcode
+\color{white}
 \vspace*{\fill}
 \hspace*{\fill}\EANisbn
 \thispagestyle{empty}
